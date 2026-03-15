@@ -13,7 +13,30 @@ export default defineConfig(({ mode }) => ({
       overlay: false,
     },
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [
+    react(),
+    mode === "development" && componentTagger(),
+    VitePWA({
+      registerType: "autoUpdate",
+      includeAssets: ["favicon.ico", "pwa-192x192.png", "pwa-512x512.png"],
+      manifest: {
+        name: "Generator Opisów Filmowych",
+        short_name: "Generator Opisów",
+        description: "Generator opisów do filmów z komunikacji miejskiej",
+        theme_color: "#1e3a5f",
+        background_color: "#0f172a",
+        display: "standalone",
+        start_url: "/",
+        icons: [
+          { src: "/pwa-192x192.png", sizes: "192x192", type: "image/png" },
+          { src: "/pwa-512x512.png", sizes: "512x512", type: "image/png" },
+        ],
+      },
+      workbox: {
+        navigateFallbackDenylist: [/^\/~oauth/],
+      },
+    }),
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
