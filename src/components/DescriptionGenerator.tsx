@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { pl } from "date-fns/locale";
-import { CalendarIcon, Copy, Sparkles } from "lucide-react";
+import { CalendarIcon, Copy, Sparkles, CalendarCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -33,17 +33,35 @@ const vehicleConfig: Record<VehicleType, { label: string; emoji: string; brandPl
   inny: { label: "Inny", emoji: "🚐", brandPlaceholder: "np. Producent", modelPlaceholder: "np. Model pojazdu" },
 };
 
+const availableHashtags = [
+  "#komunikacjamiejska",
+  "#autobusy",
+  "#tramwaje",
+  "#pociągi",
+  "#transport",
+];
+
 const DescriptionGenerator = () => {
   const [date, setDate] = useState<Date>();
   const [city, setCity] = useState("");
   const [vehicleType, setVehicleType] = useState<VehicleType>("autobus");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
+  const [sideNumber, setSideNumber] = useState("");
+  const [lineNumber, setLineNumber] = useState("");
+  const [direction, setDirection] = useState("");
   const [customDesc, setCustomDesc] = useState("");
   const [withEmoji, setWithEmoji] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [generatedText, setGeneratedText] = useState("");
 
   const config = vehicleConfig[vehicleType];
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  };
 
   const handleGenerate = () => {
     if (!date || !city.trim()) return;
@@ -53,13 +71,30 @@ const DescriptionGenerator = () => {
     lines.push(`${e ? "📅 " : ""}Data nagrania: ${format(date, "dd.MM.yyyy", { locale: pl })}`);
     lines.push(`${e ? "📍 " : ""}Miejsce: ${city.trim()}`);
 
+    if (lineNumber.trim()) {
+      lines.push(`${e ? "🔢 " : ""}Linia: ${lineNumber.trim()}`);
+    }
+
+    if (direction.trim()) {
+      lines.push(`${e ? "➡️ " : ""}Kierunek: ${direction.trim()}`);
+    }
+
     if (brand.trim() || model.trim()) {
       const vehicle = [brand.trim(), model.trim()].filter(Boolean).join(" ");
       lines.push(`${e ? config.emoji + " " : ""}Pojazd: ${vehicle}`);
     }
 
+    if (sideNumber.trim()) {
+      lines.push(`${e ? "🔖 " : ""}Nr boczny: ${sideNumber.trim()}`);
+    }
+
     if (customDesc.trim()) {
       lines.push(`${e ? "📝 " : ""}Opis: ${customDesc.trim()}`);
+    }
+
+    if (selectedTags.length > 0) {
+      lines.push("");
+      lines.push(selectedTags.join(" "));
     }
 
     setGeneratedText(lines.join("\n"));
@@ -90,27 +125,38 @@ const DescriptionGenerator = () => {
         </div>
 
         <div className="rounded-xl border border-border bg-card p-6 space-y-5">
-          {/* Row 1: Date + City — two columns on desktop */}
+          {/* Row 1: Date + City */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div className="space-y-2">
               <Label className="text-sm font-medium text-muted-foreground">Data nagrania</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-full justify-start text-left font-normal bg-background border-border hover:border-primary/50 transition-colors",
-                      !date && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "d MMMM yyyy", { locale: pl }) : "Wybierz datę"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar mode="single" selected={date} onSelect={setDate} initialFocus className="p-3 pointer-events-auto" />
-                </PopoverContent>
-              </Popover>
+              <div className="flex gap-2">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "flex-1 justify-start text-left font-normal bg-background border-border hover:border-primary/50 transition-colors",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date ? format(date, "d MMMM yyyy", { locale: pl }) : "Wybierz datę"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar mode="single" selected={date} onSelect={setDate} initialFocus className="p-3 pointer-events-auto" />
+                  </PopoverContent>
+                </Popover>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setDate(new Date())}
+                  className="shrink-0 bg-background border-border hover:border-primary/50 transition-colors"
+                  title="Ustaw dzisiejszą datę"
+                >
+                  <CalendarCheck className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -124,7 +170,7 @@ const DescriptionGenerator = () => {
             </div>
           </div>
 
-          {/* Row 2: Vehicle type + Brand — two columns on desktop */}
+          {/* Row 2: Vehicle type + Line number */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div className="space-y-2">
               <Label className="text-sm font-medium text-muted-foreground">Rodzaj pojazdu</Label>
@@ -144,6 +190,21 @@ const DescriptionGenerator = () => {
 
             <div className="space-y-2">
               <Label className="text-sm font-medium text-muted-foreground">
+                Numer linii <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+              </Label>
+              <Input
+                placeholder="np. 180"
+                value={lineNumber}
+                onChange={(e) => setLineNumber(e.target.value)}
+                className="bg-background border-border focus-visible:border-primary/50"
+              />
+            </div>
+          </div>
+
+          {/* Row 3: Brand + Model */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">
                 Marka <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
               </Label>
               <Input
@@ -153,22 +214,48 @@ const DescriptionGenerator = () => {
                 className="bg-background border-border focus-visible:border-primary/50"
               />
             </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">
+                Model <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+              </Label>
+              <Input
+                placeholder={config.modelPlaceholder}
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+                className="bg-background border-border focus-visible:border-primary/50"
+              />
+            </div>
           </div>
 
-          {/* Model */}
-          <div className="space-y-2">
-            <Label className="text-sm font-medium text-muted-foreground">
-              Model <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
-            </Label>
-            <Input
-              placeholder={config.modelPlaceholder}
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-              className="bg-background border-border focus-visible:border-primary/50"
-            />
+          {/* Row 4: Side number + Direction */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">
+                Nr boczny <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+              </Label>
+              <Input
+                placeholder="np. 1234"
+                value={sideNumber}
+                onChange={(e) => setSideNumber(e.target.value)}
+                className="bg-background border-border focus-visible:border-primary/50"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">
+                Kierunek / Przystanek <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+              </Label>
+              <Input
+                placeholder="np. Wilanów"
+                value={direction}
+                onChange={(e) => setDirection(e.target.value)}
+                className="bg-background border-border focus-visible:border-primary/50"
+              />
+            </div>
           </div>
 
-          {/* Opis własny */}
+          {/* Custom description */}
           <div className="space-y-2">
             <Label className="text-sm font-medium text-muted-foreground">
               Opis własny <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
@@ -185,9 +272,30 @@ const DescriptionGenerator = () => {
           {/* Emoji switch */}
           <div className="flex items-center justify-between rounded-lg bg-background border border-border px-4 py-3">
             <Label htmlFor="emoji-switch" className="text-sm font-medium text-muted-foreground cursor-pointer">
-              Dodaj emotki do opisu
+              Włącz emotki
             </Label>
             <Switch id="emoji-switch" checked={withEmoji} onCheckedChange={setWithEmoji} />
+          </div>
+
+          {/* Hashtags */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-muted-foreground">Hashtagi</Label>
+            <div className="flex flex-wrap gap-2">
+              {availableHashtags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => toggleTag(tag)}
+                  className={cn(
+                    "rounded-full px-3 py-1.5 text-xs font-medium border transition-colors",
+                    selectedTags.includes(tag)
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-background text-muted-foreground border-border hover:border-primary/50"
+                  )}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Generate button */}
