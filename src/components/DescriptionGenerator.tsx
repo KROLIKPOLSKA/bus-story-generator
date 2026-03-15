@@ -9,6 +9,14 @@ import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Popover,
   PopoverContent,
@@ -16,28 +24,42 @@ import {
 } from "@/components/ui/popover";
 import { toast } from "sonner";
 
+type VehicleType = "autobus" | "tramwaj" | "pociag" | "inny";
+
+const vehicleConfig: Record<VehicleType, { label: string; emoji: string; brandPlaceholder: string; modelPlaceholder: string }> = {
+  autobus: { label: "Autobus", emoji: "🚌", brandPlaceholder: "np. Solaris", modelPlaceholder: "np. Urbino 12" },
+  tramwaj: { label: "Tramwaj", emoji: "🚃", brandPlaceholder: "np. PESA", modelPlaceholder: "np. Twist" },
+  pociag: { label: "Pociąg", emoji: "🚂", brandPlaceholder: "np. PESA", modelPlaceholder: "np. Seria/Typ lokomotywy" },
+  inny: { label: "Inny", emoji: "🚐", brandPlaceholder: "np. Producent", modelPlaceholder: "np. Model pojazdu" },
+};
+
 const DescriptionGenerator = () => {
   const [date, setDate] = useState<Date>();
   const [city, setCity] = useState("");
+  const [vehicleType, setVehicleType] = useState<VehicleType>("autobus");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
   const [customDesc, setCustomDesc] = useState("");
+  const [withEmoji, setWithEmoji] = useState(false);
   const [generatedText, setGeneratedText] = useState("");
+
+  const config = vehicleConfig[vehicleType];
 
   const handleGenerate = () => {
     if (!date || !city.trim()) return;
 
+    const e = withEmoji;
     const lines: string[] = [];
-    lines.push(`Nagranie z dnia: ${format(date, "dd.MM.yyyy", { locale: pl })}`);
-    lines.push(`Miejsce: ${city.trim()}`);
+    lines.push(`${e ? "📅 " : ""}Data nagrania: ${format(date, "dd.MM.yyyy", { locale: pl })}`);
+    lines.push(`${e ? "📍 " : ""}Miejsce: ${city.trim()}`);
 
     if (brand.trim() || model.trim()) {
       const vehicle = [brand.trim(), model.trim()].filter(Boolean).join(" ");
-      lines.push(`Pojazd: ${vehicle}`);
+      lines.push(`${e ? config.emoji + " " : ""}Pojazd: ${vehicle}`);
     }
 
     if (customDesc.trim()) {
-      lines.push(`Dodatkowe informacje: ${customDesc.trim()}`);
+      lines.push(`${e ? "📝 " : ""}Opis: ${customDesc.trim()}`);
     }
 
     setGeneratedText(lines.join("\n"));
@@ -45,9 +67,7 @@ const DescriptionGenerator = () => {
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(generatedText);
-    toast.success("Skopiowano do schowka!", {
-      duration: 2000,
-    });
+    toast.success("Skopiowano do schowka!", { duration: 2000 });
   };
 
   const isValid = !!date && city.trim().length > 0;
@@ -70,71 +90,78 @@ const DescriptionGenerator = () => {
         </div>
 
         <div className="rounded-xl border border-border bg-card p-6 space-y-5">
-          {/* Data nagrania */}
-          <div className="space-y-2">
-            <Label className="text-sm font-medium text-muted-foreground">
-              Data nagrania
-            </Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full justify-start text-left font-normal bg-background border-border hover:border-primary/50 transition-colors",
-                    !date && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "d MMMM yyyy", { locale: pl }) : "Wybierz datę"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  initialFocus
-                  className="p-3 pointer-events-auto"
-                />
-              </PopoverContent>
-            </Popover>
+          {/* Row 1: Date + City — two columns on desktop */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">Data nagrania</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal bg-background border-border hover:border-primary/50 transition-colors",
+                      !date && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "d MMMM yyyy", { locale: pl }) : "Wybierz datę"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar mode="single" selected={date} onSelect={setDate} initialFocus className="p-3 pointer-events-auto" />
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">Miasto nagrania</Label>
+              <Input
+                placeholder="np. Warszawa"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="bg-background border-border focus-visible:border-primary/50"
+              />
+            </div>
           </div>
 
-          {/* Miasto */}
-          <div className="space-y-2">
-            <Label className="text-sm font-medium text-muted-foreground">
-              Miasto nagrania
-            </Label>
-            <Input
-              placeholder="np. Warszawa"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              className="bg-background border-border focus-visible:border-primary/50"
-            />
-          </div>
+          {/* Row 2: Vehicle type + Brand — two columns on desktop */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">Rodzaj pojazdu</Label>
+              <Select value={vehicleType} onValueChange={(v) => setVehicleType(v as VehicleType)}>
+                <SelectTrigger className="bg-background border-border focus:border-primary/50">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(vehicleConfig).map(([key, { label, emoji }]) => (
+                    <SelectItem key={key} value={key}>
+                      {emoji} {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          {/* Marka */}
-          <div className="space-y-2">
-            <Label className="text-sm font-medium text-muted-foreground">
-              Marka autobusu{" "}
-              <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
-            </Label>
-            <Input
-              placeholder="np. Mercedes-Benz"
-              value={brand}
-              onChange={(e) => setBrand(e.target.value)}
-              className="bg-background border-border focus-visible:border-primary/50"
-            />
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">
+                Marka <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+              </Label>
+              <Input
+                placeholder={config.brandPlaceholder}
+                value={brand}
+                onChange={(e) => setBrand(e.target.value)}
+                className="bg-background border-border focus-visible:border-primary/50"
+              />
+            </div>
           </div>
 
           {/* Model */}
           <div className="space-y-2">
             <Label className="text-sm font-medium text-muted-foreground">
-              Model autobusu{" "}
-              <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+              Model <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
             </Label>
             <Input
-              placeholder="np. Citaro"
+              placeholder={config.modelPlaceholder}
               value={model}
               onChange={(e) => setModel(e.target.value)}
               className="bg-background border-border focus-visible:border-primary/50"
@@ -144,8 +171,7 @@ const DescriptionGenerator = () => {
           {/* Opis własny */}
           <div className="space-y-2">
             <Label className="text-sm font-medium text-muted-foreground">
-              Opis własny{" "}
-              <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+              Opis własny <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
             </Label>
             <Textarea
               placeholder="Dodatkowe informacje o nagraniu..."
@@ -156,13 +182,16 @@ const DescriptionGenerator = () => {
             />
           </div>
 
+          {/* Emoji switch */}
+          <div className="flex items-center justify-between rounded-lg bg-background border border-border px-4 py-3">
+            <Label htmlFor="emoji-switch" className="text-sm font-medium text-muted-foreground cursor-pointer">
+              Dodaj emotki do opisu
+            </Label>
+            <Switch id="emoji-switch" checked={withEmoji} onCheckedChange={setWithEmoji} />
+          </div>
+
           {/* Generate button */}
-          <Button
-            onClick={handleGenerate}
-            disabled={!isValid}
-            className="w-full font-semibold"
-            size="lg"
-          >
+          <Button onClick={handleGenerate} disabled={!isValid} className="w-full font-semibold" size="lg">
             <Sparkles className="mr-2 h-4 w-4" />
             Generuj opis
           </Button>
