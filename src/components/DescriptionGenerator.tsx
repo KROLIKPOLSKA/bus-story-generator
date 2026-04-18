@@ -124,20 +124,35 @@ const DescriptionGenerator = () => {
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="w-full max-w-[600px]"
       >
-        <div className="mb-8 text-center">
+        <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Generator opisów filmowych
+            Generator opisów {mode === "film" ? "filmowych" : "do zdjęć"}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Stwórz opis do filmów z komunikacji miejskiej
+            Stwórz opis do {mode === "film" ? "filmów" : "zdjęć"} z komunikacji miejskiej
           </p>
         </div>
+
+        <Tabs value={mode} onValueChange={(v) => setMode(v as ContentMode)} className="mb-4">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="film" className="gap-2">
+              <Video className="h-4 w-4" />
+              Film
+            </TabsTrigger>
+            <TabsTrigger value="zdjecie" className="gap-2">
+              <Camera className="h-4 w-4" />
+              Zdjęcie
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
 
         <div className="rounded-xl border border-border bg-card p-6 space-y-5">
           {/* Row 1: Date + City */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground">Data nagrania</Label>
+              <Label className="text-sm font-medium text-muted-foreground">
+                {mode === "film" ? "Data nagrania" : "Data wykonania zdjęcia"}
+              </Label>
               <div className="flex gap-2">
                 <Popover>
                   <PopoverTrigger asChild>
