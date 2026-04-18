@@ -72,8 +72,13 @@ const DescriptionGenerator = () => {
 
     const e = withEmoji;
     const lines: string[] = [];
-    lines.push(`${e ? "📅 " : ""}Data nagrania: ${format(date, "dd.MM.yyyy", { locale: pl })}`);
+    const dateLabel = mode === "film" ? "Data nagrania" : "Data wykonania zdjęcia";
+    lines.push(`${e ? "📅 " : ""}${dateLabel}: ${format(date, "dd.MM.yyyy", { locale: pl })}`);
     lines.push(`${e ? "📍 " : ""}Miejsce: ${city.trim()}`);
+
+    if (carrier.trim()) {
+      lines.push(`${e ? "🏢 " : ""}Przewoźnik: ${carrier.trim()}`);
+    }
 
     if (lineNumber.trim()) {
       lines.push(`${e ? "🔢 " : ""}Linia: ${lineNumber.trim()}`);
