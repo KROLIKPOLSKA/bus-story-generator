@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { pl } from "date-fns/locale";
-import { CalendarIcon, Copy, Sparkles, CalendarCheck } from "lucide-react";
+import { CalendarIcon, Copy, Sparkles, CalendarCheck, Video, Camera } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ import {
 import { toast } from "sonner";
 
 type VehicleType = "autobus" | "tramwaj" | "pociag" | "inny";
+type ContentMode = "film" | "zdjecie";
 
 const vehicleConfig: Record<VehicleType, { label: string; emoji: string; brandPlaceholder: string; modelPlaceholder: string }> = {
   autobus: { label: "Autobus", emoji: "🚌", brandPlaceholder: "np. Solaris", modelPlaceholder: "np. Urbino 12" },
@@ -42,8 +44,10 @@ const availableHashtags = [
 ];
 
 const DescriptionGenerator = () => {
+  const [mode, setMode] = useState<ContentMode>("film");
   const [date, setDate] = useState<Date>();
   const [city, setCity] = useState("");
+  const [carrier, setCarrier] = useState("");
   const [vehicleType, setVehicleType] = useState<VehicleType>("autobus");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
@@ -68,8 +72,13 @@ const DescriptionGenerator = () => {
 
     const e = withEmoji;
     const lines: string[] = [];
-    lines.push(`${e ? "📅 " : ""}Data nagrania: ${format(date, "dd.MM.yyyy", { locale: pl })}`);
+    const dateLabel = mode === "film" ? "Data nagrania" : "Data wykonania zdjęcia";
+    lines.push(`${e ? "📅 " : ""}${dateLabel}: ${format(date, "dd.MM.yyyy", { locale: pl })}`);
     lines.push(`${e ? "📍 " : ""}Miejsce: ${city.trim()}`);
+
+    if (carrier.trim()) {
+      lines.push(`${e ? "🏢 " : ""}Przewoźnik: ${carrier.trim()}`);
+    }
 
     if (lineNumber.trim()) {
       lines.push(`${e ? "🔢 " : ""}Linia: ${lineNumber.trim()}`);
@@ -115,20 +124,35 @@ const DescriptionGenerator = () => {
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="w-full max-w-[600px]"
       >
-        <div className="mb-8 text-center">
+        <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Generator opisów filmowych
+            Generator opisów {mode === "film" ? "filmowych" : "do zdjęć"}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Stwórz opis do filmów z komunikacji miejskiej
+            Stwórz opis do {mode === "film" ? "filmów" : "zdjęć"} z komunikacji miejskiej
           </p>
         </div>
+
+        <Tabs value={mode} onValueChange={(v) => setMode(v as ContentMode)} className="mb-4">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="film" className="gap-2">
+              <Video className="h-4 w-4" />
+              Film
+            </TabsTrigger>
+            <TabsTrigger value="zdjecie" className="gap-2">
+              <Camera className="h-4 w-4" />
+              Zdjęcie
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
 
         <div className="rounded-xl border border-border bg-card p-6 space-y-5">
           {/* Row 1: Date + City */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground">Data nagrania</Label>
+              <Label className="text-sm font-medium text-muted-foreground">
+                {mode === "film" ? "Data nagrania" : "Data wykonania zdjęcia"}
+              </Label>
               <div className="flex gap-2">
                 <Popover>
                   <PopoverTrigger asChild>
@@ -160,7 +184,9 @@ const DescriptionGenerator = () => {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground">Miasto nagrania</Label>
+              <Label className="text-sm font-medium text-muted-foreground">
+                {mode === "film" ? "Miasto nagrania" : "Miasto"}
+              </Label>
               <Input
                 placeholder="np. Warszawa"
                 value={city}
@@ -168,6 +194,19 @@ const DescriptionGenerator = () => {
                 className="bg-background border-border focus-visible:border-primary/50"
               />
             </div>
+          </div>
+
+          {/* Carrier */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-muted-foreground">
+              Przewoźnik <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+            </Label>
+            <Input
+              placeholder="np. MPK Rzeszów"
+              value={carrier}
+              onChange={(e) => setCarrier(e.target.value)}
+              className="bg-background border-border focus-visible:border-primary/50"
+            />
           </div>
 
           {/* Row 2: Vehicle type + Line number */}
