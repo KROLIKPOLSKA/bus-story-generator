@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { pl } from "date-fns/locale";
-import { CalendarIcon, Copy, Sparkles, CalendarCheck } from "lucide-react";
+import { CalendarIcon, Copy, Sparkles, CalendarCheck, Video, Camera } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
