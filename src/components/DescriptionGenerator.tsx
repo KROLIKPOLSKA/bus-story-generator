@@ -26,6 +26,7 @@ import {
 import { toast } from "sonner";
 
 type VehicleType = "autobus" | "tramwaj" | "pociag" | "inny";
+type ContentMode = "film" | "zdjecie";
 
 const vehicleConfig: Record<VehicleType, { label: string; emoji: string; brandPlaceholder: string; modelPlaceholder: string }> = {
   autobus: { label: "Autobus", emoji: "🚌", brandPlaceholder: "np. Solaris", modelPlaceholder: "np. Urbino 12" },
@@ -43,8 +44,10 @@ const availableHashtags = [
 ];
 
 const DescriptionGenerator = () => {
+  const [mode, setMode] = useState<ContentMode>("film");
   const [date, setDate] = useState<Date>();
   const [city, setCity] = useState("");
+  const [carrier, setCarrier] = useState("");
   const [vehicleType, setVehicleType] = useState<VehicleType>("autobus");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
