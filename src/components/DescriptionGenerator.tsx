@@ -184,7 +184,9 @@ const DescriptionGenerator = () => {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground">Miasto nagrania</Label>
+              <Label className="text-sm font-medium text-muted-foreground">
+                {mode === "film" ? "Miasto nagrania" : "Miasto"}
+              </Label>
               <Input
                 placeholder="np. Warszawa"
                 value={city}
@@ -192,6 +194,19 @@ const DescriptionGenerator = () => {
                 className="bg-background border-border focus-visible:border-primary/50"
               />
             </div>
+          </div>
+
+          {/* Carrier */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-muted-foreground">
+              Przewoźnik <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+            </Label>
+            <Input
+              placeholder="np. MPK Rzeszów"
+              value={carrier}
+              onChange={(e) => setCarrier(e.target.value)}
+              className="bg-background border-border focus-visible:border-primary/50"
+            />
           </div>
 
           {/* Row 2: Vehicle type + Line number */}
