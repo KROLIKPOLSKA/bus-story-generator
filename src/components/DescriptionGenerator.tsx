@@ -35,6 +35,9 @@ const vehicleConfig: Record<VehicleType, { label: string; emoji: string; brandPl
   inny: { label: "Inny", emoji: "🚐", brandPlaceholder: "np. Producent", modelPlaceholder: "np. Model pojazdu" },
 };
 
+const carrierOptions = ["MPK Rzeszów", "PKS Rzeszów"];
+const CUSTOM_CARRIER = "__custom__";
+
 const availableHashtags = [
   "#komunikacjamiejska",
   "#autobusy",
@@ -47,7 +50,9 @@ const DescriptionGenerator = () => {
   const [mode, setMode] = useState<ContentMode>("film");
   const [date, setDate] = useState<Date>();
   const [city, setCity] = useState("");
-  const [carrier, setCarrier] = useState("");
+  const [carrierChoice, setCarrierChoice] = useState<string>("");
+  const [customCarrier, setCustomCarrier] = useState("");
+  const carrier = carrierChoice === CUSTOM_CARRIER ? customCarrier : carrierChoice;
   const [vehicleType, setVehicleType] = useState<VehicleType>("autobus");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
@@ -201,12 +206,27 @@ const DescriptionGenerator = () => {
             <Label className="text-sm font-medium text-muted-foreground">
               Przewoźnik <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
             </Label>
-            <Input
-              placeholder="np. MPK Rzeszów"
-              value={carrier}
-              onChange={(e) => setCarrier(e.target.value)}
-              className="bg-background border-border focus-visible:border-primary/50"
-            />
+            <Select value={carrierChoice} onValueChange={setCarrierChoice}>
+              <SelectTrigger className="bg-background border-border focus:border-primary/50">
+                <SelectValue placeholder="Wybierz przewoźnika" />
+              </SelectTrigger>
+              <SelectContent>
+                {carrierOptions.map((c) => (
+                  <SelectItem key={c} value={c}>
+                    {c}
+                  </SelectItem>
+                ))}
+                <SelectItem value={CUSTOM_CARRIER}>Wpisz własnego przewoźnika…</SelectItem>
+              </SelectContent>
+            </Select>
+            {carrierChoice === CUSTOM_CARRIER && (
+              <Input
+                placeholder="np. MKS Dębica"
+                value={customCarrier}
+                onChange={(e) => setCustomCarrier(e.target.value)}
+                className="bg-background border-border focus-visible:border-primary/50"
+              />
+            )}
           </div>
 
           {/* Row 2: Vehicle type + Line number */}
