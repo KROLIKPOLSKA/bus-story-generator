@@ -51,7 +51,7 @@ const DescriptionGenerator = () => {
   const [mode, setMode] = useState<ContentMode>("film");
   const [date, setDate] = useState<Date>();
   const [city, setCity] = useState("");
-  const [carrierChoice, setCarrierChoice] = useState<string>("");
+  const [carrierChoice, setCarrierChoice] = useState<string>("MPK Rzeszów");
   const [customCarrier, setCustomCarrier] = useState("");
   const carrier = carrierChoice === CUSTOM_CARRIER ? customCarrier : carrierChoice;
   const [vehicleType, setVehicleType] = useState<VehicleType>("autobus");
