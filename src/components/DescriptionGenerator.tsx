@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { format } from "date-fns";
+import { mpkRzeszowFleet } from "@/data/mpkRzeszowFleet";
 import { pl } from "date-fns/locale";
 import { CalendarIcon, Copy, Sparkles, CalendarCheck, Video, Camera } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -65,6 +66,17 @@ const DescriptionGenerator = () => {
   const [generatedText, setGeneratedText] = useState("");
 
   const config = vehicleConfig[vehicleType];
+
+  // Auto-fill brand/model from MPK Rzeszów fleet by side number
+  useEffect(() => {
+    if (carrier.trim() === "MPK Rzeszów") {
+      const match = mpkRzeszowFleet[sideNumber.trim()];
+      if (match) {
+        setBrand(match.brand);
+        setModel(match.model);
+      }
+    }
+  }, [carrier, sideNumber]);
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
