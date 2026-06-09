@@ -67,6 +67,17 @@ const DescriptionGenerator = () => {
 
   const config = vehicleConfig[vehicleType];
 
+  // Auto-fill brand/model from MPK Rzeszów fleet by side number
+  useEffect(() => {
+    if (carrier.trim() === "MPK Rzeszów") {
+      const match = mpkRzeszowFleet[sideNumber.trim()];
+      if (match) {
+        setBrand(match.brand);
+        setModel(match.model);
+      }
+    }
+  }, [carrier, sideNumber]);
+
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
