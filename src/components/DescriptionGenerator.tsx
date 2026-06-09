@@ -69,12 +69,14 @@ const DescriptionGenerator = () => {
 
   // Auto-fill brand/model from MPK Rzeszów fleet by side number
   useEffect(() => {
-    if (carrier.trim() === "MPK Rzeszów") {
-      const match = mpkRzeszowFleet[sideNumber.trim()];
-      if (match) {
-        setBrand(match.brand);
-        setModel(match.model);
-      }
+    const key = sideNumber.trim();
+    if (!key) return;
+    const c = carrier.trim();
+    if (c && c !== "MPK Rzeszów") return;
+    const match = mpkRzeszowFleet[key];
+    if (match) {
+      setBrand(match.brand);
+      setModel(match.model);
     }
   }, [carrier, sideNumber]);
 
