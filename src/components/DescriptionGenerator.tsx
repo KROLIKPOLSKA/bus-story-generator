@@ -51,7 +51,7 @@ const DescriptionGenerator = () => {
   const [mode, setMode] = useState<ContentMode>("film");
   const [date, setDate] = useState<Date>();
   const [city, setCity] = useState("");
-  const [carrierChoice, setCarrierChoice] = useState<string>("");
+  const [carrierChoice, setCarrierChoice] = useState<string>("MPK Rzeszów");
   const [customCarrier, setCustomCarrier] = useState("");
   const carrier = carrierChoice === CUSTOM_CARRIER ? customCarrier : carrierChoice;
   const [vehicleType, setVehicleType] = useState<VehicleType>("autobus");
@@ -69,12 +69,14 @@ const DescriptionGenerator = () => {
 
   // Auto-fill brand/model from MPK Rzeszów fleet by side number
   useEffect(() => {
-    if (carrier.trim() === "MPK Rzeszów") {
-      const match = mpkRzeszowFleet[sideNumber.trim()];
-      if (match) {
-        setBrand(match.brand);
-        setModel(match.model);
-      }
+    const key = sideNumber.trim();
+    if (!key) return;
+    const c = carrier.trim();
+    if (c && c !== "MPK Rzeszów") return;
+    const match = mpkRzeszowFleet[key];
+    if (match) {
+      setBrand(match.brand);
+      setModel(match.model);
     }
   }, [carrier, sideNumber]);
 
