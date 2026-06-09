@@ -272,34 +272,7 @@ const DescriptionGenerator = () => {
             </div>
           </div>
 
-          {/* Row 3: Brand + Model */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground">
-                Marka <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
-              </Label>
-              <Input
-                placeholder={config.brandPlaceholder}
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
-                className="bg-background border-border focus-visible:border-primary/50"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-muted-foreground">
-                Model <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
-              </Label>
-              <Input
-                placeholder={config.modelPlaceholder}
-                value={model}
-                onChange={(e) => setModel(e.target.value)}
-                className="bg-background border-border focus-visible:border-primary/50"
-              />
-            </div>
-          </div>
-
-          {/* Row 4: Side number + Direction */}
+          {/* Row 3: Side number + Direction */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div className="space-y-2">
               <Label className="text-sm font-medium text-muted-foreground">
@@ -321,6 +294,33 @@ const DescriptionGenerator = () => {
                 placeholder="np. Wilanów"
                 value={direction}
                 onChange={(e) => setDirection(e.target.value)}
+                className="bg-background border-border focus-visible:border-primary/50"
+              />
+            </div>
+          </div>
+
+          {/* Row 4: Brand + Model */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">
+                Marka <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+              </Label>
+              <Input
+                placeholder={config.brandPlaceholder}
+                value={brand}
+                onChange={(e) => setBrand(e.target.value)}
+                className="bg-background border-border focus-visible:border-primary/50"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-muted-foreground">
+                Model <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+              </Label>
+              <Input
+                placeholder={config.modelPlaceholder}
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
                 className="bg-background border-border focus-visible:border-primary/50"
               />
             </div>
