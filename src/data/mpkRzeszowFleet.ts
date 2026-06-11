@@ -1,891 +1,244 @@
-// Auto-generated from MPK Rzeszów fleet list
 export const mpkRzeszowFleet: Record<string, { brand: string; model: string }> = {
-  "100": {
-    "brand": "Solaris",
-    "model": "Urbino 12 IV electric (2018)"
-  },
-  "101": {
-    "brand": "Solaris",
-    "model": "Urbino 12 IV electric (2018)"
-  },
-  "102": {
-    "brand": "Solaris",
-    "model": "Urbino 12 IV electric (2018)"
-  },
-  "103": {
-    "brand": "Solaris",
-    "model": "Urbino 12 IV electric (2018)"
-  },
-  "104": {
-    "brand": "Solaris",
-    "model": "Urbino 12 IV electric (2018)"
-  },
-  "105": {
-    "brand": "Solaris",
-    "model": "Urbino 12 IV electric (2018)"
-  },
-  "106": {
-    "brand": "Solaris",
-    "model": "Urbino 12 IV electric (2018)"
-  },
-  "107": {
-    "brand": "Solaris",
-    "model": "Urbino 12 IV electric (2018)"
-  },
-  "108": {
-    "brand": "Solaris",
-    "model": "Urbino 12 IV electric (2018)"
-  },
-  "109": {
-    "brand": "Solaris",
-    "model": "Urbino 12 IV electric (2018)"
-  },
-  "110": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV electric (2023)"
-  },
-  "111": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV electric (2023)"
-  },
-  "112": {
-    "brand": "Solaris",
-    "model": "Urbino 9LE IV electric (2023)"
-  },
-  "113": {
-    "brand": "Solaris",
-    "model": "Urbino 9LE IV electric (2023)"
-  },
-  "114": {
-    "brand": "Solaris",
-    "model": "Urbino 9LE IV electric (2023)"
-  },
-  "115": {
-    "brand": "Solaris",
-    "model": "Urbino 9LE IV electric (2023)"
-  },
-  "116": {
-    "brand": "Solaris",
-    "model": "Urbino 9LE IV electric (2023)"
-  },
-  "117": {
-    "brand": "Solaris",
-    "model": "Urbino 9LE IV electric (2023)"
-  },
-  "300": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2023)"
-  },
-  "301": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2023)"
-  },
-  "302": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2023)"
-  },
-  "303": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2023)"
-  },
-  "304": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2023)"
-  },
-  "305": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2023)"
-  },
-  "306": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2023)"
-  },
-  "307": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2023)"
-  },
-  "308": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2023)"
-  },
-  "309": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2023)"
-  },
-  "677": {
-    "brand": "JELCZ",
-    "model": "M121M/4 (2007)"
-  },
-  "682": {
-    "brand": "JELCZ",
-    "model": "M121M/4 (2007)"
-  },
-  "759": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "760": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "761": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "762": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "763": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "764": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "765": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "766": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "767": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "768": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "769": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "770": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "771": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "772": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "773": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "774": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "775": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "776": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "777": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "778": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "779": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "780": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "781": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "782": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "783": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "784": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "785": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "786": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "787": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "788": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV (2018)"
-  },
-  "789": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV CNG Mild Hybrid (2023)"
-  },
-  "790": {
-    "brand": "Solaris",
-    "model": "Urbino 18 IV CNG Mild Hybrid (2023)"
-  },
-  "791": {
-    "brand": "Solaris",
-    "model": "Urbino 12 III (2011)"
-  },
-  "792": {
-    "brand": "Solaris",
-    "model": "Urbino 12 III (2011)"
-  },
-  "805": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "806": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "807": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "808": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "809": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "810": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "811": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "812": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "813": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "814": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "815": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "816": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "817": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "818": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "819": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "820": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "821": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "822": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "823": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "824": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "825": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "826": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "827": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "828": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "829": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "830": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "831": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "832": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "833": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "834": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "835": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "836": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "837": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "838": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "839": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "840": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "841": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "842": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "843": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "844": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "845": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "846": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "847": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "848": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "849": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "850": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "851": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "852": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "853": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "854": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "855": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "856": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "857": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "858": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "859": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "860": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "861": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "862": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "863": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "864": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 CNG II (2013)"
-  },
-  "865": {
-    "brand": "Mercedes-Benz",
-    "model": "Conecto LF (2013)"
-  },
-  "866": {
-    "brand": "Mercedes-Benz",
-    "model": "Conecto LF (2013)"
-  },
-  "867": {
-    "brand": "Mercedes-Benz",
-    "model": "Conecto LF (2013)"
-  },
-  "868": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "869": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "870": {
-    "brand": "Mercedes-Benz",
-    "model": "O530 II (2012)"
-  },
-  "900": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2016)"
-  },
-  "901": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "902": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "903": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "904": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "905": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "906": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "907": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "908": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "909": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "910": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "911": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "912": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "913": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "914": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "915": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "916": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "917": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "918": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "919": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "920": {
-    "brand": "Autosan",
-    "model": "M10LF (2013)"
-  },
-  "921": {
-    "brand": "Autosan",
-    "model": "M12LF (2016)"
-  },
-  "922": {
-    "brand": "Autosan",
-    "model": "M12LF (2018)"
-  },
-  "923": {
-    "brand": "Autosan",
-    "model": "M12LF (2018)"
-  },
-  "924": {
-    "brand": "Autosan",
-    "model": "M12LF (2018)"
-  },
-  "925": {
-    "brand": "Autosan",
-    "model": "M12LF (2018)"
-  },
-  "926": {
-    "brand": "Autosan",
-    "model": "M12LF (2018)"
-  },
-  "927": {
-    "brand": "Autosan",
-    "model": "M12LF (2018)"
-  },
-  "928": {
-    "brand": "Autosan",
-    "model": "M12LF (2018)"
-  },
-  "929": {
-    "brand": "Autosan",
-    "model": "M12LF (2018)"
-  },
-  "930": {
-    "brand": "Autosan",
-    "model": "M12LF (2018)"
-  },
-  "931": {
-    "brand": "Autosan",
-    "model": "M12LF (2018)"
-  },
-  "932": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "933": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "934": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "935": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "936": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "937": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "938": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "939": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "940": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "941": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "942": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "943": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "944": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "945": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "946": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "947": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "948": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "949": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "950": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "951": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "952": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "953": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "954": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "955": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "956": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "957": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "958": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "959": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "960": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "961": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "962": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "963": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "964": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "965": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "966": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "967": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "968": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "969": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "970": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "971": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2020)"
-  },
-  "972": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "973": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "974": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "975": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "976": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "977": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "978": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "979": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "980": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "981": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "982": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "983": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "984": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "985": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "986": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "987": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "988": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "989": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "990": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  },
-  "991": {
-    "brand": "Autosan",
-    "model": "M12LF CNG (2021)"
-  }
+  "100": { brand: "Solaris", model: "Urbino 12 IV electric (2018)" },
+  "101": { brand: "Solaris", model: "Urbino 12 IV electric (2018)" },
+  "102": { brand: "Solaris", model: "Urbino 12 IV electric (2018)" },
+  "103": { brand: "Solaris", model: "Urbino 12 IV electric (2018)" },
+  "104": { brand: "Solaris", model: "Urbino 12 IV electric (2018)" },
+  "105": { brand: "Solaris", model: "Urbino 12 IV electric (2018)" },
+  "106": { brand: "Solaris", model: "Urbino 12 IV electric (2018)" },
+  "107": { brand: "Solaris", model: "Urbino 12 IV electric (2018)" },
+  "108": { brand: "Solaris", model: "Urbino 12 IV electric (2018)" },
+  "109": { brand: "Solaris", model: "Urbino 12 IV electric (2018)" },
+  "110": { brand: "Solaris", model: "Urbino 18 IV electric (2023)" },
+  "111": { brand: "Solaris", model: "Urbino 18 IV electric (2023)" },
+  "112": { brand: "Solaris", model: "Urbino 9LE IV electric (2023)" },
+  "113": { brand: "Solaris", model: "Urbino 9LE IV electric (2023)" },
+  "114": { brand: "Solaris", model: "Urbino 9LE IV electric (2023)" },
+  "115": { brand: "Solaris", model: "Urbino 9LE IV electric (2023)" },
+  "116": { brand: "Solaris", model: "Urbino 9LE IV electric (2023)" },
+  "117": { brand: "Solaris", model: "Urbino 9LE IV electric (2023)" },
+  "200": { brand: "NesoBus", model: "12 (2026)" },
+  "201": { brand: "NesoBus", model: "12 (2026)" },
+  "202": { brand: "NesoBus", model: "12 (2026)" },
+  "203": { brand: "NesoBus", model: "12 (2026)" },
+  "204": { brand: "NesoBus", model: "12 (2026)" },
+  "205": { brand: "NesoBus", model: "12 (2026)" },
+  "206": { brand: "NesoBus", model: "12 (2026)" },
+  "207": { brand: "NesoBus", model: "12 (2026)" },
+  "208": { brand: "NesoBus", model: "12 (2026)" },
+  "209": { brand: "NesoBus", model: "12 (2026)" },
+  "210": { brand: "NesoBus", model: "12 (2026)" },
+  "211": { brand: "NesoBus", model: "12 (2026)" },
+  "212": { brand: "NesoBus", model: "12 (2026)" },
+  "213": { brand: "NesoBus", model: "12 (2026)" },
+  "214": { brand: "NesoBus", model: "12 (2026)" },
+  "215": { brand: "NesoBus", model: "12 (2026)" },
+  "216": { brand: "NesoBus", model: "12 (2026)" },
+  "217": { brand: "NesoBus", model: "12 (2026)" },
+  "218": { brand: "NesoBus", model: "12 (2026)" },
+  "219": { brand: "NesoBus", model: "12 (2026)" },
+  "300": { brand: "Autosan", model: "M12LF CNG (2023)" },
+  "301": { brand: "Autosan", model: "M12LF CNG (2023)" },
+  "302": { brand: "Autosan", model: "M12LF CNG (2023)" },
+  "303": { brand: "Autosan", model: "M12LF CNG (2023)" },
+  "304": { brand: "Autosan", model: "M12LF CNG (2023)" },
+  "305": { brand: "Autosan", model: "M12LF CNG (2023)" },
+  "306": { brand: "Autosan", model: "M12LF CNG (2023)" },
+  "307": { brand: "Autosan", model: "M12LF CNG (2023)" },
+  "308": { brand: "Autosan", model: "M12LF CNG (2023)" },
+  "309": { brand: "Autosan", model: "M12LF CNG (2023)" },
+  "677": { brand: "JELCZ", model: "M121M/4 (2007)" },
+  "682": { brand: "JELCZ", model: "M121M/4 (2007)" },
+  "759": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "760": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "761": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "762": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "763": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "764": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "765": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "766": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "767": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "768": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "769": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "770": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "771": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "772": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "773": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "774": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "775": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "776": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "777": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "778": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "779": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "780": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "781": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "782": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "783": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "784": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "785": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "786": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "787": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "788": { brand: "Solaris", model: "Urbino 18 IV (2018)" },
+  "789": { brand: "Solaris", model: "Urbino 18 IV CNG Mild Hybrid (2023)" },
+  "790": { brand: "Solaris", model: "Urbino 18 IV CNG Mild Hybrid (2023)" },
+  "791": { brand: "Solaris", model: "Urbino 12 III (2011)" },
+  "792": { brand: "Solaris", model: "Urbino 12 III (2011)" },
+  "805": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "806": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "807": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "808": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "809": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "810": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "811": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "812": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "813": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "814": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "815": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "816": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "817": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "818": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "819": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "820": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "821": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "822": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "823": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "824": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "825": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "826": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "827": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "828": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "829": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "830": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "831": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "832": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "833": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "834": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "835": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "836": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "837": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "838": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "839": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "840": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "841": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "842": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "843": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "844": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "845": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "846": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "847": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "848": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "849": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "850": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "851": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "852": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "853": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "854": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "855": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "856": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "857": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "858": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "859": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "860": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "861": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "862": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "863": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "864": { brand: "Mercedes-Benz", model: "O530 CNG II (2013)" },
+  "865": { brand: "Mercedes-Benz", model: "Conecto LF (2013)" },
+  "866": { brand: "Mercedes-Benz", model: "Conecto LF (2013)" },
+  "867": { brand: "Mercedes-Benz", model: "Conecto LF (2013)" },
+  "868": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "869": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "870": { brand: "Mercedes-Benz", model: "O530 II (2012)" },
+  "900": { brand: "Autosan", model: "M12LF CNG (2016)" },
+  "901": { brand: "Autosan", model: "M10LF (2013)" },
+  "902": { brand: "Autosan", model: "M10LF (2013)" },
+  "903": { brand: "Autosan", model: "M10LF (2013)" },
+  "904": { brand: "Autosan", model: "M10LF (2013)" },
+  "905": { brand: "Autosan", model: "M10LF (2013)" },
+  "906": { brand: "Autosan", model: "M10LF (2013)" },
+  "907": { brand: "Autosan", model: "M10LF (2013)" },
+  "908": { brand: "Autosan", model: "M10LF (2013)" },
+  "909": { brand: "Autosan", model: "M10LF (2013)" },
+  "910": { brand: "Autosan", model: "M10LF (2013)" },
+  "911": { brand: "Autosan", model: "M10LF (2013)" },
+  "912": { brand: "Autosan", model: "M10LF (2013)" },
+  "913": { brand: "Autosan", model: "M10LF (2013)" },
+  "914": { brand: "Autosan", model: "M10LF (2013)" },
+  "915": { brand: "Autosan", model: "M10LF (2013)" },
+  "916": { brand: "Autosan", model: "M10LF (2013)" },
+  "917": { brand: "Autosan", model: "M10LF (2013)" },
+  "918": { brand: "Autosan", model: "M10LF (2013)" },
+  "919": { brand: "Autosan", model: "M10LF (2013)" },
+  "920": { brand: "Autosan", model: "M10LF (2013)" },
+  "921": { brand: "Autosan", model: "M12LF (2016)" },
+  "922": { brand: "Autosan", model: "M12LF (2018)" },
+  "923": { brand: "Autosan", model: "M12LF (2018)" },
+  "924": { brand: "Autosan", model: "M12LF (2018)" },
+  "925": { brand: "Autosan", model: "M12LF (2018)" },
+  "926": { brand: "Autosan", model: "M12LF (2018)" },
+  "927": { brand: "Autosan", model: "M12LF (2018)" },
+  "928": { brand: "Autosan", model: "M12LF (2018)" },
+  "929": { brand: "Autosan", model: "M12LF (2018)" },
+  "930": { brand: "Autosan", model: "M12LF (2018)" },
+  "931": { brand: "Autosan", model: "M12LF (2018)" },
+  "932": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "933": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "934": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "935": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "936": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "937": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "938": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "939": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "940": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "941": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "942": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "943": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "944": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "945": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "946": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "947": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "948": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "949": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "950": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "951": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "952": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "953": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "954": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "955": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "956": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "957": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "958": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "959": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "960": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "961": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "962": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "963": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "964": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "965": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "966": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "967": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "968": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "969": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "970": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "971": { brand: "Autosan", model: "M12LF CNG (2020)" },
+  "972": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "973": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "974": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "975": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "976": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "977": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "978": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "979": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "980": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "981": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "982": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "983": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "984": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "985": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "986": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "987": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "988": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "989": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "990": { brand: "Autosan", model: "M12LF CNG (2021)" },
+  "991": { brand: "Autosan", model: "M12LF CNG (2021)" },
 };
