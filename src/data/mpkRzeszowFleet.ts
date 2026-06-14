@@ -47,6 +47,7 @@ export const mpkRzeszowFleet: Record<string, { brand: string; model: string }> =
   "307": { brand: "Autosan", model: "M12LF CNG (2023)" },
   "308": { brand: "Autosan", model: "M12LF CNG (2023)" },
   "309": { brand: "Autosan", model: "M12LF CNG (2023)" },
+  "442": { brand: "Jelcz", model: "PR110U" },
   "714": { brand: "Solaris", model: "Urbino 12 I" },
   "677": { brand: "JELCZ", model: "M121M/4 (2007)" },
   "682": { brand: "JELCZ", model: "M121M/4 (2007)" },
