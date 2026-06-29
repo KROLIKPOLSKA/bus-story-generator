@@ -416,6 +416,26 @@ const DescriptionGenerator = () => {
                   <Copy className="mr-2 h-4 w-4" />
                   Kopiuj do schowka
                 </Button>
+
+                {generatedTitle && (
+                  <div className="mt-4">
+                    <Label className="text-sm font-medium text-muted-foreground">Tytuł</Label>
+                    <div className="mt-2 rounded-lg bg-background border border-border p-4">
+                      <pre className="font-mono text-sm text-foreground whitespace-pre-wrap leading-relaxed">
+                        {generatedTitle}
+                      </pre>
+                    </div>
+                    <Button
+                      onClick={handleCopyTitle}
+                      variant="outline"
+                      className="w-full mt-3 border-border hover:border-primary/50 transition-colors"
+                      size="lg"
+                    >
+                      <Copy className="mr-2 h-4 w-4" />
+                      Kopiuj tytuł
+                    </Button>
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
