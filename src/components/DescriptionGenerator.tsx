@@ -127,6 +127,15 @@ const DescriptionGenerator = () => {
     }
 
     setGeneratedText(lines.join("\n"));
+
+    // Build title (no emojis)
+    const vehicleParts = [brand.trim(), model.trim()].filter(Boolean).join(" ");
+    const titleParts: string[] = [];
+    const head = [vehicleParts, sideNumber.trim()].filter(Boolean).join(" ");
+    if (head) titleParts.push(head);
+    if (lineNumber.trim()) titleParts.push(`jako linia ${lineNumber.trim()}`);
+    if (direction.trim()) titleParts.push(`w Kierunku ${direction.trim()}`);
+    setGeneratedTitle(titleParts.join(" "));
   };
 
   const handleCopy = async () => {
