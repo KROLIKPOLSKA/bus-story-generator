@@ -64,6 +64,7 @@ const DescriptionGenerator = () => {
   const [withEmoji, setWithEmoji] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [generatedText, setGeneratedText] = useState("");
+  const [generatedTitle, setGeneratedTitle] = useState("");
 
   const config = vehicleConfig[vehicleType];
 
@@ -126,11 +127,25 @@ const DescriptionGenerator = () => {
     }
 
     setGeneratedText(lines.join("\n"));
+
+    // Build title (no emojis)
+    const vehicleParts = [brand.trim(), model.trim()].filter(Boolean).join(" ");
+    const titleParts: string[] = [];
+    const head = [vehicleParts, sideNumber.trim()].filter(Boolean).join(" ");
+    if (head) titleParts.push(head);
+    if (lineNumber.trim()) titleParts.push(`jako linia ${lineNumber.trim()}`);
+    if (direction.trim()) titleParts.push(`w Kierunku ${direction.trim()}`);
+    setGeneratedTitle(titleParts.join(" "));
   };
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(generatedText);
     toast.success("Skopiowano do schowka!", { duration: 2000 });
+  };
+
+  const handleCopyTitle = async () => {
+    await navigator.clipboard.writeText(generatedTitle);
+    toast.success("Skopiowano tytuł!", { duration: 2000 });
   };
 
   const isValid = !!date && city.trim().length > 0;
@@ -401,6 +416,26 @@ const DescriptionGenerator = () => {
                   <Copy className="mr-2 h-4 w-4" />
                   Kopiuj do schowka
                 </Button>
+
+                {generatedTitle && (
+                  <div className="mt-4">
+                    <Label className="text-sm font-medium text-muted-foreground">Tytuł</Label>
+                    <div className="mt-2 rounded-lg bg-background border border-border p-4">
+                      <pre className="font-mono text-sm text-foreground whitespace-pre-wrap leading-relaxed">
+                        {generatedTitle}
+                      </pre>
+                    </div>
+                    <Button
+                      onClick={handleCopyTitle}
+                      variant="outline"
+                      className="w-full mt-3 border-border hover:border-primary/50 transition-colors"
+                      size="lg"
+                    >
+                      <Copy className="mr-2 h-4 w-4" />
+                      Kopiuj tytuł
+                    </Button>
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
