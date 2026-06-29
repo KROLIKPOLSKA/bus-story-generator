@@ -64,6 +64,7 @@ const DescriptionGenerator = () => {
   const [withEmoji, setWithEmoji] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [generatedText, setGeneratedText] = useState("");
+  const [generatedTitle, setGeneratedTitle] = useState("");
 
   const config = vehicleConfig[vehicleType];
 
