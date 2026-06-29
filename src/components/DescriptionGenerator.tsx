@@ -143,6 +143,11 @@ const DescriptionGenerator = () => {
     toast.success("Skopiowano do schowka!", { duration: 2000 });
   };
 
+  const handleCopyTitle = async () => {
+    await navigator.clipboard.writeText(generatedTitle);
+    toast.success("Skopiowano tytuł!", { duration: 2000 });
+  };
+
   const isValid = !!date && city.trim().length > 0;
 
   return (
