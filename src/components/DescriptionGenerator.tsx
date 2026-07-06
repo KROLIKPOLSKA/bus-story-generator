@@ -362,6 +362,19 @@ const DescriptionGenerator = () => {
             />
           </div>
 
+          {/* Co-author */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-muted-foreground">
+              Współautor <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+            </Label>
+            <Input
+              placeholder="np. Jan Kowalski"
+              value={coAuthor}
+              onChange={(e) => setCoAuthor(e.target.value)}
+              className="bg-background border-border focus-visible:border-primary/50"
+            />
+          </div>
+
           {/* Emoji switch */}
           <div className="flex items-center justify-between rounded-lg bg-background border border-border px-4 py-3">
             <Label htmlFor="emoji-switch" className="text-sm font-medium text-muted-foreground cursor-pointer">
