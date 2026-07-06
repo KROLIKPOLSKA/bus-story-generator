@@ -61,6 +61,7 @@ const DescriptionGenerator = () => {
   const [lineNumber, setLineNumber] = useState("");
   const [direction, setDirection] = useState("");
   const [customDesc, setCustomDesc] = useState("");
+  const [coAuthor, setCoAuthor] = useState("");
   const [withEmoji, setWithEmoji] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [generatedText, setGeneratedText] = useState("");
@@ -119,6 +120,10 @@ const DescriptionGenerator = () => {
 
     if (customDesc.trim()) {
       lines.push(`${e ? "📝 " : ""}Opis: ${customDesc.trim()}`);
+    }
+
+    if (coAuthor.trim()) {
+      lines.push(`${e ? "👤 " : ""}Współautor: ${coAuthor.trim()}`);
     }
 
     if (selectedTags.length > 0) {
@@ -354,6 +359,19 @@ const DescriptionGenerator = () => {
               onChange={(e) => setCustomDesc(e.target.value)}
               rows={3}
               className="bg-background border-border focus-visible:border-primary/50 resize-none"
+            />
+          </div>
+
+          {/* Co-author */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-muted-foreground">
+              Współautor <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+            </Label>
+            <Input
+              placeholder="np. Jan Kowalski"
+              value={coAuthor}
+              onChange={(e) => setCoAuthor(e.target.value)}
+              className="bg-background border-border focus-visible:border-primary/50"
             />
           </div>
 
