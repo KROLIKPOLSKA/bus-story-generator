@@ -122,6 +122,10 @@ const DescriptionGenerator = () => {
       lines.push(`${e ? "📝 " : ""}Opis: ${customDesc.trim()}`);
     }
 
+    if (coAuthor.trim()) {
+      lines.push(`${e ? "👤 " : ""}Współautor: ${coAuthor.trim()}`);
+    }
+
     if (selectedTags.length > 0) {
       lines.push("");
       lines.push(selectedTags.join(" "));
