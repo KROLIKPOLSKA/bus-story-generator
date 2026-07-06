@@ -61,6 +61,7 @@ const DescriptionGenerator = () => {
   const [lineNumber, setLineNumber] = useState("");
   const [direction, setDirection] = useState("");
   const [customDesc, setCustomDesc] = useState("");
+  const [coAuthor, setCoAuthor] = useState("");
   const [withEmoji, setWithEmoji] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [generatedText, setGeneratedText] = useState("");
