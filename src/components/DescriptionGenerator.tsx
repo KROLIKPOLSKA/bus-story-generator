@@ -47,7 +47,7 @@ import { toast } from "sonner";
 
 type VehicleType = "autobus" | "tramwaj" | "pociag" | "inny";
 type ContentMode = "film" | "zdjecie";
-type FormMode = "szybki" | "zaawansowany";
+
 
 interface HistoryEntry {
   id: string;
