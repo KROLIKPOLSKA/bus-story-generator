@@ -523,189 +523,175 @@ const DescriptionGenerator = () => {
           </TabsList>
         </Tabs>
 
-        {/* Progress bar */}
-        <div className="mb-3 space-y-1">
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>Wypełnienie formularza</span>
-            <span>{progress}%</span>
-          </div>
-          <Progress value={progress} className="h-1.5" />
+        <div className="mb-4 flex items-center justify-end gap-2">
+          <Label htmlFor="collapsible-switch" className="text-xs text-muted-foreground cursor-pointer">
+            Sekcje zwijane
+          </Label>
+          <Switch
+            id="collapsible-switch"
+            checked={collapsible}
+            onCheckedChange={setCollapsible}
+          />
         </div>
 
-        {/* Mode toggle */}
-        <Tabs value={formMode} onValueChange={(v) => setFormMode(v as FormMode)} className="mb-4">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="szybki">Szybki</TabsTrigger>
-            <TabsTrigger value="zaawansowany">Zaawansowany</TabsTrigger>
-          </TabsList>
-        </Tabs>
-
         <div className="rounded-xl border border-border bg-card p-4 sm:p-6 space-y-5">
-          {isQuick ? (
-            <div className="space-y-5">
-              {CityField}
-              {CarrierField}
-              {LineField}
-              {HashtagsField}
-            </div>
-          ) : (
-            <Accordion
-              type="multiple"
-              value={openSections}
-              onValueChange={setOpenSections}
-              className="space-y-2"
-            >
-              <AccordionItem value="basic" className="border border-border rounded-lg px-3 bg-background/40">
-                <AccordionTrigger className="hover:no-underline py-3">
-                  <span className="flex items-center gap-2 text-sm font-medium">
-                    Podstawowe informacje
-                    <span className="text-xs text-muted-foreground/70">
-                      {basicFilled}/{basicTotal}
-                    </span>
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pb-2 pt-1">
-                    {DateField}
-                    {CityField}
+          {(() => {
+            const BasicFields = (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {DateField}
+                {CityField}
+              </div>
+            );
+            const VehicleFields = (
+              <div className="space-y-5">
+                {CarrierField}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-muted-foreground">Rodzaj pojazdu</Label>
+                    <Select value={vehicleType} onValueChange={(v) => setVehicleType(v as VehicleType)}>
+                      <SelectTrigger className="bg-background border-border focus:border-primary/50">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.entries(vehicleConfig).map(([key, { label, emoji }]) => (
+                          <SelectItem key={key} value={key}>
+                            {emoji} {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="vehicle" className="border border-border rounded-lg px-3 bg-background/40">
-                <AccordionTrigger className="hover:no-underline py-3">
-                  <span className="flex items-center gap-2 text-sm font-medium">
-                    Przewoźnik i pojazd
-                    <span className="text-xs text-muted-foreground/70">
-                      {vehicleFilled}/{vehicleTotal}
-                    </span>
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-5 pb-2 pt-1">
-                    {CarrierField}
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium text-muted-foreground">Rodzaj pojazdu</Label>
-                        <Select value={vehicleType} onValueChange={(v) => setVehicleType(v as VehicleType)}>
-                          <SelectTrigger className="bg-background border-border focus:border-primary/50">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Object.entries(vehicleConfig).map(([key, { label, emoji }]) => (
-                              <SelectItem key={key} value={key}>
-                                {emoji} {label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      {LineField}
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium text-muted-foreground">
-                          Nr boczny <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
-                        </Label>
-                        <Input
-                          placeholder="np. 1234"
-                          value={sideNumber}
-                          onChange={(e) => setSideNumber(e.target.value)}
-                          className="bg-background border-border focus-visible:border-primary/50"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium text-muted-foreground">
-                          Kierunek / Przystanek <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
-                        </Label>
-                        <Input
-                          placeholder="np. Wilanów"
-                          value={direction}
-                          onChange={(e) => setDirection(e.target.value)}
-                          className="bg-background border-border focus-visible:border-primary/50"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium text-muted-foreground">
-                          Marka <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
-                        </Label>
-                        <Input
-                          placeholder={config.brandPlaceholder}
-                          value={brand}
-                          onChange={(e) => setBrand(e.target.value)}
-                          className="bg-background border-border focus-visible:border-primary/50"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium text-muted-foreground">
-                          Model <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
-                        </Label>
-                        <Input
-                          placeholder={config.modelPlaceholder}
-                          value={model}
-                          onChange={(e) => setModel(e.target.value)}
-                          className="bg-background border-border focus-visible:border-primary/50"
-                        />
-                      </div>
-                    </div>
+                  {LineField}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-muted-foreground">
+                      Nr boczny <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+                    </Label>
+                    <Input
+                      placeholder="np. 1234"
+                      value={sideNumber}
+                      onChange={(e) => setSideNumber(e.target.value)}
+                      className="bg-background border-border focus-visible:border-primary/50"
+                    />
                   </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="desc" className="border border-border rounded-lg px-3 bg-background/40">
-                <AccordionTrigger className="hover:no-underline py-3">
-                  <span className="flex items-center gap-2 text-sm font-medium">
-                    Opis i personalizacja
-                    <span className="text-xs text-muted-foreground/70">
-                      {descFilled}/{descTotal}
-                    </span>
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-5 pb-2 pt-1">
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-muted-foreground">
-                        Opis własny <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
-                      </Label>
-                      <Textarea
-                        placeholder="Dodatkowe informacje o nagraniu..."
-                        value={customDesc}
-                        onChange={(e) => setCustomDesc(e.target.value)}
-                        rows={3}
-                        className="bg-background border-border focus-visible:border-primary/50 resize-none"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium text-muted-foreground">
-                        Współautor <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
-                      </Label>
-                      <Input
-                        placeholder="np. Jan Kowalski"
-                        value={coAuthor}
-                        onChange={(e) => setCoAuthor(e.target.value)}
-                        className="bg-background border-border focus-visible:border-primary/50"
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between rounded-lg bg-background border border-border px-4 py-3">
-                      <Label htmlFor="emoji-switch" className="text-sm font-medium text-muted-foreground cursor-pointer">
-                        Włącz emotki
-                      </Label>
-                      <Switch id="emoji-switch" checked={withEmoji} onCheckedChange={setWithEmoji} />
-                    </div>
-
-                    {HashtagsField}
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-muted-foreground">
+                      Kierunek / Przystanek <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+                    </Label>
+                    <Input
+                      placeholder="np. Wilanów"
+                      value={direction}
+                      onChange={(e) => setDirection(e.target.value)}
+                      className="bg-background border-border focus-visible:border-primary/50"
+                    />
                   </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          )}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-muted-foreground">
+                      Marka <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+                    </Label>
+                    <Input
+                      placeholder={config.brandPlaceholder}
+                      value={brand}
+                      onChange={(e) => setBrand(e.target.value)}
+                      className="bg-background border-border focus-visible:border-primary/50"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-muted-foreground">
+                      Model <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+                    </Label>
+                    <Input
+                      placeholder={config.modelPlaceholder}
+                      value={model}
+                      onChange={(e) => setModel(e.target.value)}
+                      className="bg-background border-border focus-visible:border-primary/50"
+                    />
+                  </div>
+                </div>
+              </div>
+            );
+            const DescFields = (
+              <div className="space-y-5">
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-muted-foreground">
+                    Opis własny <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+                  </Label>
+                  <Textarea
+                    placeholder="Dodatkowe informacje o nagraniu..."
+                    value={customDesc}
+                    onChange={(e) => setCustomDesc(e.target.value)}
+                    rows={3}
+                    className="bg-background border-border focus-visible:border-primary/50 resize-none"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-muted-foreground">
+                    Współautor <span className="text-xs text-muted-foreground/60">— Opcjonalne</span>
+                  </Label>
+                  <Input
+                    placeholder="np. Jan Kowalski"
+                    value={coAuthor}
+                    onChange={(e) => setCoAuthor(e.target.value)}
+                    className="bg-background border-border focus-visible:border-primary/50"
+                  />
+                </div>
+                <div className="flex items-center justify-between rounded-lg bg-background border border-border px-4 py-3">
+                  <Label htmlFor="emoji-switch" className="text-sm font-medium text-muted-foreground cursor-pointer">
+                    Włącz emotki
+                  </Label>
+                  <Switch id="emoji-switch" checked={withEmoji} onCheckedChange={setWithEmoji} />
+                </div>
+                {HashtagsField}
+              </div>
+            );
+
+            if (!collapsible) {
+              return (
+                <div className="space-y-6">
+                  {BasicFields}
+                  {VehicleFields}
+                  {DescFields}
+                </div>
+              );
+            }
+            return (
+              <Accordion
+                type="multiple"
+                value={openSections}
+                onValueChange={setOpenSections}
+                className="space-y-2"
+              >
+                <AccordionItem value="basic" className="border border-border rounded-lg px-3 bg-background/40">
+                  <AccordionTrigger className="hover:no-underline py-3">
+                    <span className="flex items-center gap-2 text-sm font-medium">Podstawowe informacje</span>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="pb-2 pt-1">{BasicFields}</div>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="vehicle" className="border border-border rounded-lg px-3 bg-background/40">
+                  <AccordionTrigger className="hover:no-underline py-3">
+                    <span className="flex items-center gap-2 text-sm font-medium">Przewoźnik i pojazd</span>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="pb-2 pt-1">{VehicleFields}</div>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="desc" className="border border-border rounded-lg px-3 bg-background/40">
+                  <AccordionTrigger className="hover:no-underline py-3">
+                    <span className="flex items-center gap-2 text-sm font-medium">Opis i personalizacja</span>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="pb-2 pt-1">{DescFields}</div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            );
+          })()}
+
 
           {/* Preview above button */}
           <AnimatePresence>
