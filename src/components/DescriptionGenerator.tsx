@@ -308,7 +308,7 @@ const DescriptionGenerator = () => {
     saveLS(LS_KEYS.history, []);
   };
 
-  const isQuick = formMode === "szybki";
+
 
   const RecentChips = ({
     items,
