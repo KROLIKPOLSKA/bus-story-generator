@@ -105,7 +105,7 @@ const pushRecent = (list: string[], value: string, max = 5): string[] => {
 
 const DescriptionGenerator = () => {
   const [mode, setMode] = useState<ContentMode>("film");
-  const [formMode, setFormMode] = useState<FormMode>("zaawansowany");
+  const [collapsible, setCollapsible] = useState<boolean>(false);
   const [date, setDate] = useState<Date>();
   const [city, setCity] = useState("");
   const [cityError, setCityError] = useState(false);
