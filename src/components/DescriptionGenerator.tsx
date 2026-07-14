@@ -693,7 +693,27 @@ const DescriptionGenerator = () => {
           })()}
 
 
-          {/* Preview above button */}
+          {/* Generate button */}
+          <Button
+            onClick={runGenerate}
+            disabled={isGenerating}
+            className="w-full font-semibold"
+            size="lg"
+          >
+            {isGenerating ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Generowanie...
+              </>
+            ) : (
+              <>
+                <Sparkles className="mr-2 h-4 w-4" />
+                Generuj opis
+              </>
+            )}
+          </Button>
+
+          {/* Preview below button */}
           <AnimatePresence>
             {generatedText && (
               <motion.div
@@ -766,25 +786,6 @@ const DescriptionGenerator = () => {
             )}
           </AnimatePresence>
 
-          {/* Generate button */}
-          <Button
-            onClick={runGenerate}
-            disabled={isGenerating}
-            className="w-full font-semibold"
-            size="lg"
-          >
-            {isGenerating ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Generowanie...
-              </>
-            ) : (
-              <>
-                <Sparkles className="mr-2 h-4 w-4" />
-                Generuj opis
-              </>
-            )}
-          </Button>
 
           {/* Recent descriptions */}
           {history.length > 0 && (
