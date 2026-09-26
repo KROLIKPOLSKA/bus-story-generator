@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, KeyboardEvent } from "react";
 import { format } from "date-fns";
 import { mpkRzeszowFleet } from "@/data/mpkRzeszowFleet";
+import { pksRzeszowFleet } from "@/data/pksRzeszowFleet";
 import { pl } from "date-fns/locale";
 import {
   CalendarIcon,
@@ -146,13 +147,19 @@ const DescriptionGenerator = () => {
     [customHashtags]
   );
 
-  // Auto-fill brand/model from MPK Rzeszów fleet by side number
+  // Auto-fill brand/model from carrier fleet by side number
   useEffect(() => {
     const key = sideNumber.trim();
     if (!key) return;
     const c = carrier.trim();
-    if (c && c !== "MPK Rzeszów") return;
-    const match = mpkRzeszowFleet[key];
+    const fleet =
+      c === "PKS Rzeszów"
+        ? pksRzeszowFleet
+        : !c || c === "MPK Rzeszów"
+          ? mpkRzeszowFleet
+          : null;
+    if (!fleet) return;
+    const match = fleet[key];
     if (match) {
       setBrand(match.brand);
       setModel(match.model);
