@@ -45,6 +45,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { toast } from "sonner";
+import AppMenu from "@/components/AppMenu";
 
 type VehicleType = "autobus" | "tramwaj" | "pociag" | "inny";
 type ContentMode = "film" | "zdjecie";
@@ -501,7 +502,9 @@ const DescriptionGenerator = () => {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <>
+    <AppMenu collapsible={collapsible} onCollapsibleChange={setCollapsible} />
+    <div className="min-h-[calc(100dvh-4rem)] flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -529,17 +532,6 @@ const DescriptionGenerator = () => {
             </TabsTrigger>
           </TabsList>
         </Tabs>
-
-        <div className="mb-4 flex items-center justify-end gap-2">
-          <Label htmlFor="collapsible-switch" className="text-xs text-muted-foreground cursor-pointer">
-            Sekcje zwijane
-          </Label>
-          <Switch
-            id="collapsible-switch"
-            checked={collapsible}
-            onCheckedChange={setCollapsible}
-          />
-        </div>
 
         <div className="rounded-xl border border-border bg-card p-4 sm:p-6 space-y-5">
           {(() => {
@@ -840,6 +832,7 @@ const DescriptionGenerator = () => {
         </div>
       </motion.div>
     </div>
+    </>
   );
 };
 
