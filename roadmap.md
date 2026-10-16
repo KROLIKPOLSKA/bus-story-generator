@@ -1,0 +1,4 @@
+- [x] Add animated upper-left menu and move collapsible-section setting into it.
+- [x] Add optional light theme, preserving the existing dark theme.
+- [x] Show both carrier fleets with vehicle search.
+- [x] Verify menu, settings, search and existing description generation.
