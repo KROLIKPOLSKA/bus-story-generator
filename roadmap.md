@@ -2,3 +2,7 @@
 - [x] Add optional light theme, preserving the existing dark theme.
 - [x] Show both carrier fleets with vehicle search.
 - [x] Verify menu, settings, search and existing description generation.
+- [x] Investigate historical assignments, trip endpoints and source access terms; confirm public brigade history and live APIs, but no authorized complete historical join.
+- [x] Prepare time-based lookup with an explicitly unavailable provider, optional Warsaw time and result states; do not invent historical courses.
+- [x] Protect manual line/direction entries and verify lookup rules, cancellation and existing description generation (17 tests plus browser checks).
+- [ ] Connect a real historical provider — blocked by a missing verified date-aware fleet-to-trip/direction source and confirmed reuse terms.

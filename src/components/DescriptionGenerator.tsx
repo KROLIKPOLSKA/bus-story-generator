@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, KeyboardEvent } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef, KeyboardEvent } from "react";
 import { format } from "date-fns";
 import { mpkRzeszowFleet } from "@/data/mpkRzeszowFleet";
 import { pksRzeszowFleet } from "@/data/pksRzeszowFleet";
@@ -46,6 +46,8 @@ import {
 } from "@/components/ui/popover";
 import { toast } from "sonner";
 import AppMenu from "@/components/AppMenu";
+import CourseLookup from "@/components/CourseLookup";
+import { applyCourseValues, type VehicleCourse } from "@/lib/courseLookup";
 
 type VehicleType = "autobus" | "tramwaj" | "pociag" | "inny";
 type ContentMode = "film" | "zdjecie";
@@ -109,6 +111,7 @@ const DescriptionGenerator = () => {
   const [mode, setMode] = useState<ContentMode>("film");
   const [collapsible, setCollapsible] = useState<boolean>(false);
   const [date, setDate] = useState<Date>();
+  const [courseTime, setCourseTime] = useState("");
   const [city, setCity] = useState("");
   const [cityError, setCityError] = useState(false);
   const [carrierChoice, setCarrierChoice] = useState<string>("MPK Rzeszów");
@@ -120,6 +123,32 @@ const DescriptionGenerator = () => {
   const [sideNumber, setSideNumber] = useState("");
   const [lineNumber, setLineNumber] = useState("");
   const [direction, setDirection] = useState("");
+  const lineRef = useRef("");
+  const directionRef = useRef("");
+  const autoValues = useRef<{ line?: string; direction?: string }>({});
+  lineRef.current = lineNumber;
+  directionRef.current = direction;
+  const applyCourse = useCallback((course: VehicleCourse, replace: boolean) => {
+    const current = { line: lineRef.current, direction: directionRef.current };
+    const next = applyCourseValues(current, course, replace);
+    if (replace || !current.line.trim()) autoValues.current.line = next.line;
+    if (replace || !current.direction.trim()) autoValues.current.direction = next.direction;
+    lineRef.current = next.line;
+    directionRef.current = next.direction;
+    setLineNumber(next.line);
+    setDirection(next.direction);
+  }, []);
+  const clearAutoCourse = useCallback(() => {
+    if (autoValues.current.line !== undefined && lineRef.current === autoValues.current.line) {
+      lineRef.current = "";
+      setLineNumber("");
+    }
+    if (autoValues.current.direction !== undefined && directionRef.current === autoValues.current.direction) {
+      directionRef.current = "";
+      setDirection("");
+    }
+    autoValues.current = {};
+  }, []);
   const [customDesc, setCustomDesc] = useState("");
   const [coAuthor, setCoAuthor] = useState("");
   const [withEmoji, setWithEmoji] = useState(false);
@@ -451,7 +480,8 @@ const DescriptionGenerator = () => {
       <Input
         placeholder="np. 180"
         value={lineNumber}
-        onChange={(e) => setLineNumber(e.target.value)}
+        aria-label="Numer linii"
+        onChange={(e) => { autoValues.current.line = undefined; setLineNumber(e.target.value); }}
         className="bg-background border-border focus-visible:border-primary/50"
       />
     </div>
@@ -570,6 +600,7 @@ const DescriptionGenerator = () => {
                     <Input
                       placeholder="np. 1234"
                       value={sideNumber}
+                      aria-label="Numer taborowy"
                       onChange={(e) => setSideNumber(e.target.value)}
                       className="bg-background border-border focus-visible:border-primary/50"
                     />
@@ -581,11 +612,17 @@ const DescriptionGenerator = () => {
                     <Input
                       placeholder="np. Wilanów"
                       value={direction}
-                      onChange={(e) => setDirection(e.target.value)}
+                      aria-label="Kierunek / Przystanek"
+                      onChange={(e) => { autoValues.current.direction = undefined; setDirection(e.target.value); }}
                       className="bg-background border-border focus-visible:border-primary/50"
                     />
                   </div>
                 </div>
+                <div className="space-y-2">
+                  <Label htmlFor="course-time" className="text-sm font-medium text-muted-foreground">Godzina (Warszawa) <span className="text-xs text-muted-foreground/60">— Opcjonalne</span></Label>
+                  <Input id="course-time" type="time" value={courseTime} onChange={(e) => setCourseTime(e.target.value)} className="bg-background border-border focus-visible:border-primary/50" />
+                </div>
+                <CourseLookup query={{ carrier: vehicleType === "autobus" ? carrier : "", vehicle: sideNumber, date: date ? format(date, "yyyy-MM-dd") : "", time: courseTime }} onApply={applyCourse} onClear={clearAutoCourse} />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-2">
                     <Label className="text-sm font-medium text-muted-foreground">
