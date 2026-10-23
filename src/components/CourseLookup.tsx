@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Loader2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { createCourseLookup, unavailableCourseProvider, type CourseQuery, type VehicleCourse } from "@/lib/courseLookup";
+import { type CourseQuery, type VehicleCourse } from "@/lib/courseLookup";
+import { serverCourseLookup } from "@/lib/serverCourseLookup";
 
-const lookup = createCourseLookup(unavailableCourseProvider);
+const lookup = serverCourseLookup;
 type LookupState =
   | { status: "idle" | "loading" | "invalid-time" }
   | { status: "unavailable"; reason: string }

@@ -14,13 +14,149 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      transport_cleanup_runs: {
+        Row: {
+          deleted_courses: number
+          deleted_requests: number
+          error_code: string | null
+          finished_at: string | null
+          local_date: string
+          started_at: string
+          status: string
+        }
+        Insert: {
+          deleted_courses?: number
+          deleted_requests?: number
+          error_code?: string | null
+          finished_at?: string | null
+          local_date: string
+          started_at: string
+          status: string
+        }
+        Update: {
+          deleted_courses?: number
+          deleted_requests?: number
+          error_code?: string | null
+          finished_at?: string | null
+          local_date?: string
+          started_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      transport_course_cache: {
+        Row: {
+          brigade: string | null
+          carrier: string
+          direction: string
+          ends_at: string
+          evidence: string
+          expires_at: string
+          fetched_at: string
+          id: string
+          line: string
+          service_date: string
+          source_url: string
+          starts_at: string
+          vehicle: string
+        }
+        Insert: {
+          brigade?: string | null
+          carrier: string
+          direction: string
+          ends_at: string
+          evidence: string
+          expires_at?: string
+          fetched_at?: string
+          id?: string
+          line: string
+          service_date: string
+          source_url: string
+          starts_at: string
+          vehicle: string
+        }
+        Update: {
+          brigade?: string | null
+          carrier?: string
+          direction?: string
+          ends_at?: string
+          evidence?: string
+          expires_at?: string
+          fetched_at?: string
+          id?: string
+          line?: string
+          service_date?: string
+          source_url?: string
+          starts_at?: string
+          vehicle?: string
+        }
+        Relationships: []
+      }
+      transport_lookup_requests: {
+        Row: {
+          failures: number
+          lease_until: string
+          request_key: string
+          retry_after: string
+          status: string
+          token: string
+          updated_at: string
+        }
+        Insert: {
+          failures?: number
+          lease_until: string
+          request_key: string
+          retry_after: string
+          status: string
+          token: string
+          updated_at?: string
+        }
+        Update: {
+          failures?: number
+          lease_until?: string
+          request_key?: string
+          retry_after?: string
+          status?: string
+          token?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      transport_request_budget: {
+        Row: {
+          bucket: string
+          used: number
+          window_start: string
+        }
+        Insert: {
+          bucket: string
+          used: number
+          window_start: string
+        }
+        Update: {
+          bucket?: string
+          used?: number
+          window_start?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      transport_claim: { Args: { p_key: string }; Returns: Json }
+      transport_cleanup: { Args: { p_at?: string }; Returns: Json }
+      transport_finish: {
+        Args: {
+          p_courses?: Json
+          p_key: string
+          p_status: string
+          p_token: string
+        }
+        Returns: boolean
+      }
+      transport_next_noon: { Args: { p_at: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never
