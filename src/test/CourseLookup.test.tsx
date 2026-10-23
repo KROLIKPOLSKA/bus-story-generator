@@ -3,10 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { VehicleCourse } from "@/lib/courseLookup";
 
 const provider = vi.hoisted(() => vi.fn());
-vi.mock("@/lib/courseLookup", async (load) => ({
-  ...await load<typeof import("@/lib/courseLookup")>(),
-  unavailableCourseProvider: provider,
-}));
+vi.mock("@/lib/serverCourseLookup", () => ({ serverCourseLookup: provider }));
 import CourseLookup from "@/components/CourseLookup";
 
 const course: VehicleCourse = {
