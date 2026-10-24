@@ -2,6 +2,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { z } from 'npm:zod@3';
 import { lookupTransport, type Course, type Store } from '../_shared/transport.ts';
+import { loadCatalog } from '../_shared/rzeszowCatalog.ts';
 
 const schema = z.object({ carrier: z.enum(['MPK Rzeszów', 'PKS Rzeszów']), vehicle: z.string().trim().min(1).max(30).regex(/^[\p{L}\p{N} -]+$/u), date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), time: z.string().regex(/^\d{2}:\d{2}$/) }).strict();
 Deno.serve(async req => {
@@ -27,7 +28,27 @@ Deno.serve(async req => {
         if (error) throw error; return data === true;
       },
     };
-    return reply(await lookupTransport(parsed.data, store));
+    const result = await lookupTransport(parsed.data, store);
+    if (result.status !== 'unavailable' || parsed.data.carrier !== 'MPK Rzeszów') return reply(result);
+    try {
+      const catalog = await loadCatalog({
+        async read() {
+          const { data, error } = await db.from('transport_source_cache').select('payload,expires_at').eq('source_key', 'rzeszow-gtfs-180').maybeSingle();
+          if (error) throw error;
+          return data ? { payload: data.payload, expiresAt: data.expires_at } : undefined;
+        },
+        async claim() { return store.claim('official-catalog:180'); },
+        async save(payload, expiresAt) {
+          const { error } = await db.from('transport_source_cache').upsert({ source_key: 'rzeszow-gtfs-180', payload, fetched_at: payload.fetchedAt, expires_at: expiresAt });
+          if (error) throw error;
+        },
+        async finish(token, status) { await store.finish('official-catalog:180', token, status, [], parsed.data); },
+      });
+      return reply({ status: 'unavailable', reason: `Oficjalne API udostępnia zbiór „${catalog.name}” (${catalog.resources.length} plików GTFS). To rozkłady planowane, nie przydziały autobusów do kursów. Nie udało się potwierdzić brygady dla podanego pojazdu, daty i godziny. Uzupełnij linię i kierunek ręcznie.`, catalog });
+    } catch (error) {
+      console.error('Official catalog failed', error instanceof Error ? error.message : 'Unknown error');
+      return reply({ status: 'unavailable', reason: 'Nie udało się odczytać oficjalnego katalogu rozkładów. Spróbuj ponownie za chwilę; linię i kierunek możesz uzupełnić ręcznie.' });
+    }
   } catch (error) {
     console.error('Transport lookup failed', error instanceof Error ? error.message : 'Unknown error');
     return reply({ status: 'unavailable', reason: 'Pamięć kursów jest chwilowo niedostępna. Uzupełnij linię i kierunek ręcznie.' }, 503);
