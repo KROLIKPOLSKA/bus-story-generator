@@ -27,7 +27,7 @@ describe('official Rzeszów catalog', () => {
     const fetcher = vi.fn(async () => new Response(JSON.stringify(payload)));
     const noon = new Date('2026-10-24T10:00:00Z');
     await loadCatalog(s, fetcher, noon);
-    expect(fetcher.mock.calls[0][0]).toBe(DATASET_URL);
+    expect(fetcher).toHaveBeenCalledWith(DATASET_URL, expect.objectContaining({ headers: { Accept: 'application/json' } }));
     expect(s.save).toHaveBeenCalledWith(parseCatalog(payload, noon), '2026-10-25T11:00:00.000Z');
   });
   it('does not overwrite data when the API is offline', async () => {

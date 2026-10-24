@@ -30,8 +30,10 @@ export async function loadCatalog(store: CatalogStore, fetcher: typeof fetch = f
   if (cached && Date.parse(cached.expiresAt) > at.getTime()) return cached.payload as Catalog;
   const claim = await store.claim();
   if (claim.status !== 'claimed' || !claim.token) throw new Error('Catalog request in progress or cooling down');
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15_000);
   try {
-    const response = await fetcher(DATASET_URL, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(15_000) });
+    const response = await fetcher(DATASET_URL, { headers: { Accept: 'application/json' }, signal: controller.signal });
     if (!response.ok) throw new Error(`Official API HTTP ${response.status}`);
     const catalog = parseCatalog(await response.json(), at);
     await store.save(catalog, nextWarsawNoon(at));
@@ -40,5 +42,7 @@ export async function loadCatalog(store: CatalogStore, fetcher: typeof fetch = f
   } catch (error) {
     await store.finish(claim.token, 'error');
     throw error;
+  } finally {
+    clearTimeout(timeout);
   }
 }
