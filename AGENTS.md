@@ -7,3 +7,4 @@
 - Keep cache commits and request leases atomic in service-only database functions; use bounded global source budgets and per-request exponential backoff to deduplicate fetches across instances.
 - Run noon cleanup at both possible UTC hours with a Warsaw-hour guard and per-date success record; advisory transaction locks prevent overlap and timestamp expiry remains authoritative if cleanup is delayed.
 - Track auto-filled course fields separately from manual entries, clearing only automatic values when lookup inputs change so user corrections survive.
+- Read the official GTFS dataset through its fixed JSON detail endpoint and cache metadata separately until Warsaw noon; catalog resources prove schedule availability, never vehicle-to-course assignments.

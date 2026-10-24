@@ -6,6 +6,8 @@
 - [x] Prepare time-based lookup with an explicitly unavailable provider, optional Warsaw time and result states; do not invent historical courses.
 - [x] Protect manual line/direction entries and verify lookup rules, cancellation and existing description generation (17 tests plus browser checks).
 - [ ] Connect a real historical provider — blocked by a missing verified date-aware fleet-to-trip/direction source and confirmed reuse terms.
+- [ ] Connect the official Rzeszów datasets API and verify its GTFS resources without inventing vehicle assignments.
+- [ ] Complete actual/historical brigade lookup if official resources provide verified vehicle-to-trip assignments; otherwise report the exact missing data.
 - [ ] Inspect Cloud infrastructure and verify current source capabilities.
 - [ ] Add private persistent interval cache, request deduplication, limits and error backoff.
 - [ ] Add Warsaw-noon expiry, safe scheduled cleanup and execution records.

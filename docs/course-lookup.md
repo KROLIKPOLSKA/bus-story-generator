@@ -2,7 +2,25 @@
 
 ## Current status
 
-The form accepts the existing fleet number and date plus an optional Warsaw time. The provider currently returns explicit unavailability. No sample course data is shipped in the application and no outbound requests are made by this placeholder provider.
+The form accepts fleet number, date and Warsaw time. Production requests go through `transport-lookup` and read unexpired database course intervals. The official Rzeszów GTFS catalog is now connected for metadata; no vehicle-to-course provider is registered and no sample course data is shipped.
+
+## Official API connection (2026-10-24)
+
+- The user-supplied `/v1/datasets/?format=api` returns HTML, the Django browsable API. Runtime uses JSON: `https://otwartedane.erzeszow.pl/v1/datasets/180/?format=json`.
+- Dataset 180 is `rozklady-jazdy-gtfs`, explicitly described as planned schedules. Its `related_files` includes unrelated resources, so only ZIP entries named GTFS are selected.
+- The official `/v1/resources/` lists file metadata. Tested `dataset`, `dataset_id`, and `limit` parameters did not filter its 412 records. Runtime does not fetch that full list or download full GTFS ZIPs for each vehicle lookup.
+- Resource 1101 was inspected once for research. Tables: agency, feed_info, stops, transfers, routes, trips, stop_times, calendar, calendar_dates and shapes. `trips.block_id` exists but does not prove a fleet-number assignment. No vehicle/brigade assignment fields were found in the inspected headers.
+- Multiple schedule versions are listed; schedule-version availability does not establish an archive of actual vehicle assignments. No relevant bus GTFS-Realtime or vehicle-history API was established in the official metadata.
+- Missing dependency: an authorized fleet-number + date/time to trip/brigade mapping. Current and historical brigade autofill therefore remains unavailable, with an explicit Polish message after successful catalog retrieval.
+
+## Persistent cache and cleanup
+
+- Service-only RLS tables store course intervals, request leases/budget, source metadata and cleanup statuses. Browsers cannot insert assignments.
+- The fixed dataset metadata request has a shared database cache until the next strictly future Warsaw noon, a database lease to prevent concurrent upstream requests, a global budget and error backoff. Only metadata is fetched; no fleet download is represented as a single-vehicle lookup.
+- Course cache keys include carrier, vehicle, service date and validity interval; read queries select only matching, unexpired half-open intervals. Requests never use an expired record as evidence.
+- One SQL job checks at 10:00 and 11:00 UTC. Only the invocation at local Warsaw hour 12 performs cleanup, so DST is handled without changing schedules. Success per local date and advisory locks prevent duplicate/parallel cleanup. This is two low-frequency checks daily, not continuous polling.
+- Cleanup affects only transport tables; source metadata cleanup is tied transactionally to the cleanup success update. User data is untouched.
+- If a source request fails or has malformed data, no new payload replaces the prior cache. Expired stored data is not returned as current data.
 
 ## Source investigation (2026-10-22)
 
@@ -35,7 +53,7 @@ All URLs above are relative to `https://kmrzeszow.live`. Live API accessibility 
 
 ## Provider contract
 
-Replace `unavailableCourseProvider` in `src/components/CourseLookup.tsx` only after confirming a usable, authorized source. If server fetching is required, enable Lovable Cloud first and implement the adapter through a server function. Never expose credentials or implement an unverified endpoint in the browser.
+Register a `Source` in the existing Cloud function only after confirming a usable authorized assignment source. The legacy day-provider remains for isolated tests, not the production connection. Never expose credentials or implement an unverified endpoint in the browser.
 
 `CourseDayProvider` receives carrier, vehicle number, Warsaw calendar date and cancellation signal. It must return either:
 
@@ -52,7 +70,7 @@ Vehicle-to-brigade assignments alone are insufficient. Resolve individual course
 - Intervals are start-inclusive and end-exclusive. All matching candidates are retained.
 - A single confirmed candidate can fill empty fields automatically. Timetable-only or ambiguous results require selection.
 - Manual entries survive lookup changes. Only auto-filled values are cleared when query inputs change; explicit replacement is available in a result.
-- Successful vehicle/day responses are cached in memory for five minutes. Provider failures are not cached. Cancellation prevents stale results updating the form.
+- Production cache is persisted until Warsaw noon; the legacy test day-provider uses a five-minute memory cache. Cancellation prevents stale results updating the form.
 
 ## Verification
 

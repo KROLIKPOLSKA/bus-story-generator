@@ -140,6 +140,27 @@ export type Database = {
         }
         Relationships: []
       }
+      transport_source_cache: {
+        Row: {
+          expires_at: string
+          fetched_at: string
+          payload: Json
+          source_key: string
+        }
+        Insert: {
+          expires_at?: string
+          fetched_at?: string
+          payload: Json
+          source_key: string
+        }
+        Update: {
+          expires_at?: string
+          fetched_at?: string
+          payload?: Json
+          source_key?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
