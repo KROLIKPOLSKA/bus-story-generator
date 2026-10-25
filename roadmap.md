@@ -13,4 +13,4 @@
 - [x] Configure Warsaw-noon expiry and guarded SQL cleanup with execution records; include source cache in cleanup.
 - [x] Integrate server lookup without changing manual values or generator UI.
 - [x] Run 24 focused tests covering catalog, expiry/DST, offline preservation, deduplication and existing course rules; verify deployed official catalog read and UI generation.
-- [ ] Verify production cleanup execution at noon — waiting for the first scheduled run; no fabricated execution status.
+- [x] Verify successful production noon cleanup records, including 10:00 UTC before DST change and 11:00 UTC after it.
