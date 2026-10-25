@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useTheme } from "next-themes";
-import { Bus, Database, Menu, Moon, Search, Settings, Sun, X } from "lucide-react";
+import { Database, Menu, Moon, Search, Settings, Sun, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { searchVehicles } from "@/data/vehicleDatabase";
+import { AppLogo } from "@/components/AppLogo";
 
 interface AppMenuProps {
   collapsible: boolean;
@@ -30,7 +31,7 @@ export default function AppMenu({ collapsible, onCollapsibleChange }: AppMenuPro
         </SheetTrigger>
         <SheetContent side="left" className="flex w-[calc(100%-1rem)] flex-col gap-6 p-5 sm:w-full sm:max-w-md" aria-describedby={undefined}>
           <SheetHeader className="pr-8 text-left">
-            <SheetTitle className="flex items-center gap-2"><Bus className="h-5 w-5 text-primary" /> Generator opisów</SheetTitle>
+            <SheetTitle className="flex items-center gap-2"><AppLogo className="h-8 w-8" /> Generator opisów</SheetTitle>
           </SheetHeader>
           <Tabs defaultValue="settings" className="flex min-h-0 flex-1 flex-col">
             <TabsList className="mb-5 grid w-full shrink-0 grid-cols-2">
@@ -84,6 +85,7 @@ export default function AppMenu({ collapsible, onCollapsibleChange }: AppMenuPro
           </Tabs>
         </SheetContent>
       </Sheet>
+      <AppLogo className="h-9 w-9" />
       <span className="text-sm font-medium text-muted-foreground">Generator opisów</span>
     </header>
   );

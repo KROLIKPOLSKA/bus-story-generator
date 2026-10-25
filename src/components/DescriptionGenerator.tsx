@@ -20,6 +20,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { AppLogo } from "@/components/AppLogo";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
@@ -541,7 +542,8 @@ const DescriptionGenerator = () => {
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="w-full max-w-[600px]"
       >
-        <div className="mb-6 text-center">
+        <div className="mb-6 flex flex-col items-center gap-3 text-center">
+          <AppLogo className="h-14 w-14" />
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Generator opisów {mode === "film" ? "filmowych" : "do zdjęć"}
           </h1>
