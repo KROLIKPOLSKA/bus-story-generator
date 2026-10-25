@@ -1,4 +1,4 @@
-import logoAsset from "@/assets/logo.png.asset.json";
+import logoAsset from "@/assets/logo-mark.png.asset.json";
 import { cn } from "@/lib/utils";
 
 interface AppLogoProps {
@@ -10,7 +10,7 @@ export function AppLogo({ className, label = "Logo aplikacji" }: AppLogoProps) {
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary p-1.5 shadow-sm",
+        "inline-flex shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary p-1 shadow-sm",
         className,
       )}
     >
