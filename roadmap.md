@@ -6,10 +6,11 @@
 - [x] Prepare time-based lookup with an explicitly unavailable provider, optional Warsaw time and result states; do not invent historical courses.
 - [x] Protect manual line/direction entries and verify lookup rules, cancellation and existing description generation (17 tests plus browser checks).
 - [ ] Connect a real historical provider — blocked by a missing verified date-aware fleet-to-trip/direction source and confirmed reuse terms.
-- [ ] Connect the official Rzeszów datasets API and verify its GTFS resources without inventing vehicle assignments.
-- [ ] Complete actual/historical brigade lookup if official resources provide verified vehicle-to-trip assignments; otherwise report the exact missing data.
-- [ ] Inspect Cloud infrastructure and verify current source capabilities.
-- [ ] Add private persistent interval cache, request deduplication, limits and error backoff.
-- [ ] Add Warsaw-noon expiry, safe scheduled cleanup and execution records.
-- [ ] Integrate server lookup without changing manual values or generator UI.
-- [ ] Test cache/time rules, database cleanup and the real UI; document actual connections and blockers.
+- [x] Connect the official Rzeszów datasets JSON API and inspect real GTFS ZIP headers; no vehicle assignment fields found.
+- [ ] Complete actual/historical brigade lookup — blocked by missing authorized fleet-number/date/time to trip/brigade mapping; official GTFS schedules alone do not supply it.
+- [x] Inspect Cloud tables, schedules and official source capabilities.
+- [x] Add service-only persistent interval/source cache, request leases, limits and error backoff.
+- [x] Configure Warsaw-noon expiry and guarded SQL cleanup with execution records; include source cache in cleanup.
+- [x] Integrate server lookup without changing manual values or generator UI.
+- [x] Run 24 focused tests covering catalog, expiry/DST, offline preservation, deduplication and existing course rules; verify deployed official catalog read and UI generation.
+- [x] Verify successful production noon cleanup records, including 10:00 UTC before DST change and 11:00 UTC after it.
