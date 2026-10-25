@@ -85,7 +85,7 @@ export default function AppMenu({ collapsible, onCollapsibleChange }: AppMenuPro
           </Tabs>
         </SheetContent>
       </Sheet>
-      <AppLogo className="h-9 w-9" />
+      <AppLogo className="h-10 w-10" />
       <span className="text-sm font-medium text-muted-foreground">Generator opisów</span>
     </header>
   );
