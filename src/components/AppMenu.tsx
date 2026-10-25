@@ -31,7 +31,7 @@ export default function AppMenu({ collapsible, onCollapsibleChange }: AppMenuPro
         </SheetTrigger>
         <SheetContent side="left" className="flex w-[calc(100%-1rem)] flex-col gap-6 p-5 sm:w-full sm:max-w-md" aria-describedby={undefined}>
           <SheetHeader className="pr-8 text-left">
-            <SheetTitle className="flex items-center gap-2"><AppLogo className="h-8 w-8" /> Generator opisów</SheetTitle>
+            <SheetTitle className="flex items-center gap-2"><AppLogo className="h-7" /> Generator opisów</SheetTitle>
           </SheetHeader>
           <Tabs defaultValue="settings" className="flex min-h-0 flex-1 flex-col">
             <TabsList className="mb-5 grid w-full shrink-0 grid-cols-2">
@@ -85,7 +85,7 @@ export default function AppMenu({ collapsible, onCollapsibleChange }: AppMenuPro
           </Tabs>
         </SheetContent>
       </Sheet>
-      <AppLogo className="h-10 w-10" />
+      <AppLogo className="h-8" />
       <span className="text-sm font-medium text-muted-foreground">Generator opisów</span>
     </header>
   );

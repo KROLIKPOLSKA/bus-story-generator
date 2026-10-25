@@ -543,7 +543,7 @@ const DescriptionGenerator = () => {
         className="w-full max-w-[600px]"
       >
         <div className="mb-6 flex flex-col items-center gap-3 text-center">
-          <AppLogo className="h-14 w-14" />
+          <AppLogo className="h-16" />
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Generator opisów {mode === "film" ? "filmowych" : "do zdjęć"}
           </h1>
