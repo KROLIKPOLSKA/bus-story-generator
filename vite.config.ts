@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.ico", "pwa-192x192.png", "pwa-512x512.png"],
+      includeAssets: ["favicon.png", "pwa-192x192.png", "pwa-512x512.png"],
       manifest: {
         name: "Generator Opisów Filmowych",
         short_name: "Generator Opisów",
