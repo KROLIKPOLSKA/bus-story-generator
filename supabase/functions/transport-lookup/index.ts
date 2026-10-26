@@ -3,6 +3,7 @@ import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { z } from 'npm:zod@3';
 import { lookupTransport, type Course, type Store } from '../_shared/transport.ts';
 import { loadCatalog } from '../_shared/rzeszowCatalog.ts';
+import { kmRzeszowSource } from '../_shared/kmrzeszow.ts';
 
 const schema = z.object({ carrier: z.enum(['MPK Rzeszów', 'PKS Rzeszów']), vehicle: z.string().trim().min(1).max(30).regex(/^[\p{L}\p{N} -]+$/u), date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), time: z.string().regex(/^\d{2}:\d{2}$/) }).strict();
 Deno.serve(async req => {
@@ -28,7 +29,7 @@ Deno.serve(async req => {
         if (error) throw error; return data === true;
       },
     };
-    const result = await lookupTransport(parsed.data, store);
+    const result = await lookupTransport(parsed.data, store, parsed.data.carrier === 'MPK Rzeszów' ? kmRzeszowSource : undefined);
     if (result.status !== 'unavailable' || parsed.data.carrier !== 'MPK Rzeszów') return reply(result);
     try {
       const catalog = await loadCatalog({
