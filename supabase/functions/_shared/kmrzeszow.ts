@@ -62,7 +62,7 @@ export function resolveCourses(q: Query, entries: HistoryEntry[], blocks: Map<st
       if (!startsAt || !endsAt) continue;
       out.push({
         id: `km:${e.blockId}:${trip.tripId}:${q.date}`, vehicle: q.vehicle, line: trip.line, direction: trip.headsign, brigade: e.brigade,
-        startsAt, endsAt, evidence: 'scheduled', sourceUrl: `${KM_BASE}/historia/brygada/${e.blockId}`, fetchedAt,
+        startsAt, endsAt, evidence: 'confirmed', sourceUrl: `${KM_BASE}/historia/brygada/${e.blockId}`, fetchedAt,
       });
       break;
     }
