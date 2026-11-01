@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx";
-import { exportPayload, FIELD_LABELS, parseJsonImport, rowsFromSheet, VEHICLE_FIELDS, type ParsedImport, type VehicleBase } from "./vehicleBases";
+import { exportPayload, parseJsonImport, rowsFromSheet, VEHICLE_FIELDS, type ParsedImport, type VehicleBase } from "./vehicleBases";
 
 const MAX_BYTES = 20 * 1024 * 1024;
 
@@ -57,6 +57,5 @@ export function downloadJsonTemplate() {
 }
 export function downloadXlsxTemplate() {
   const wb = workbook({ name: "", city: "", operator: "", category: "", description: "", vehicles: [] });
-  XLSX.utils.sheet_add_aoa(wb.Sheets["pojazdy"], [VEHICLE_FIELDS.map((f) => FIELD_LABELS[f])], { origin: "A2" });
   XLSX.writeFile(wb, "szablon_bazy_pojazdow.xlsx");
 }
