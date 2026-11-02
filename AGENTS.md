@@ -1,5 +1,6 @@
 # Architecture rules
-- Keep the vehicle browser read-only and derive its groups and search results from the same carrier fleet files used for autofill, so the two views cannot diverge.
+- Keep the vehicle browser read-only and derive its groups from the same built-in fleets and local bases used for autofill and the carrier list, so the views cannot diverge.
+- Store user vehicle bases only in browser IndexedDB (whole-base atomic writes, active base id in localStorage) behind src/lib/vehicleBaseStore; keep pure import/merge rules in src/lib/vehicleBases so they stay testable and never touch other bases.
 - Keep application-wide theme selection in next-themes and express both themes with global semantic CSS tokens, so menus, forms and notifications share one theme.
 - Keep application settings in AppMenu while the generator owns form-section state, so changing navigation does not reset entered form values.
 - Keep production course lookup in a public read-only Cloud function with service-only cache tables and an injectable verified source; never infer trips from fleet metadata; MPK Rzeszów courses come from kmrzeszow.live observed vehicle history plus the brigade trip list, fetched only per request.
