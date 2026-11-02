@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo, useCallback, useRef, KeyboardEvent } from
 import { format } from "date-fns";
 import { mpkRzeszowFleet } from "@/data/mpkRzeszowFleet";
 import { pksRzeszowFleet } from "@/data/pksRzeszowFleet";
+import { findLocalVehicle, formTypeOf, mergeCarrierOptions, norm, suggestLocalVehicles } from "@/lib/vehicleBases";
+import { useVehicleBases } from "@/lib/vehicleBaseStore";
 import { pl } from "date-fns/locale";
 import {
   CalendarIcon,
@@ -68,7 +70,7 @@ const vehicleConfig: Record<VehicleType, { label: string; emoji: string; brandPl
   inny: { label: "Inny", emoji: "🚐", brandPlaceholder: "np. Producent", modelPlaceholder: "np. Model pojazdu" },
 };
 
-const carrierOptions = ["MPK Rzeszów", "PKS Rzeszów"];
+const builtinCarriers = ["MPK Rzeszów", "PKS Rzeszów"];
 const CUSTOM_CARRIER = "__custom__";
 
 const defaultHashtags = [
@@ -178,10 +180,39 @@ const DescriptionGenerator = () => {
     [customHashtags]
   );
 
-  // Auto-fill brand/model from carrier fleet by side number
+  const vehicleBases = useVehicleBases();
+  const activeBase = vehicleBases.active;
+  const carrierOptions = useMemo(() => mergeCarrierOptions(builtinCarriers, vehicleBases.bases), [vehicleBases.bases]);
+  const autoVehicle = useRef<{ operator: string; side: string; brand: string; model: string } | null>(null);
+  const localMatch = useMemo(() => findLocalVehicle(activeBase, carrier, sideNumber), [activeBase, carrier, sideNumber]);
+  const localSuggestions = useMemo(
+    () => (localMatch ? [] : suggestLocalVehicles(activeBase, carrier, sideNumber)),
+    [activeBase, carrier, sideNumber, localMatch]
+  );
+
+  // Clear an auto-selected vehicle when the carrier changes to one it does not belong to
+  useEffect(() => {
+    const a = autoVehicle.current;
+    if (!a || norm(a.operator) === norm(carrier)) return;
+    autoVehicle.current = null;
+    setSideNumber((s) => (s === a.side ? "" : s));
+    setBrand((b) => (b === a.brand ? "" : b));
+    setModel((m) => (m === a.model ? "" : m));
+  }, [carrier]);
+
+  // Auto-fill from the active local base first, then from the built-in carrier fleets
   useEffect(() => {
     const key = sideNumber.trim();
     if (!key) return;
+    if (localMatch) {
+      if (localMatch.brand) setBrand(localMatch.brand);
+      if (localMatch.model) setModel(localMatch.model);
+      const t = formTypeOf(localMatch.vehicle_type);
+      if (t) setVehicleType(t);
+      if (localMatch.city) setCity((c) => c.trim() ? c : localMatch.city!);
+      autoVehicle.current = { operator: localMatch.operator || activeBase?.operator || carrier, side: sideNumber, brand: localMatch.brand ?? brand, model: localMatch.model ?? model };
+      return;
+    }
     const c = carrier.trim();
     const fleet =
       c === "PKS Rzeszów"
@@ -194,8 +225,15 @@ const DescriptionGenerator = () => {
     if (match) {
       setBrand(match.brand);
       setModel(match.model);
+      autoVehicle.current = { operator: c || "MPK Rzeszów", side: sideNumber, brand: match.brand, model: match.model };
     }
-  }, [carrier, sideNumber]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [carrier, sideNumber, localMatch]);
+  const builtinHas = (() => {
+    const c = carrier.trim();
+    const f = c === "PKS Rzeszów" ? pksRzeszowFleet : !c || c === "MPK Rzeszów" ? mpkRzeszowFleet : null;
+    return !!f?.[sideNumber.trim()];
+  })();
 
   useEffect(() => {
     if (cityError && city.trim()) setCityError(false);
@@ -606,6 +644,21 @@ const DescriptionGenerator = () => {
                       onChange={(e) => setSideNumber(e.target.value)}
                       className="bg-background border-border focus-visible:border-primary/50"
                     />
+                    {activeBase && sideNumber.trim() && !localMatch && (
+                      <div className="space-y-1" aria-live="polite">
+                        {localSuggestions.length > 0 ? (
+                          <div className="flex flex-wrap gap-1.5">
+                            {localSuggestions.map((v) => (
+                              <button key={v.id} type="button" onClick={() => setSideNumber(v.vehicle_number || v.fleet_id || v.registration_number || "")}
+                                className="rounded-full border border-border bg-secondary px-2.5 py-1 text-xs hover:border-primary/50">
+                                {v.vehicle_number || v.fleet_id || v.registration_number} · {[v.brand, v.model].filter(Boolean).join(" ") || "—"}
+                              </button>
+                            ))}
+                          </div>
+                        ) : !builtinHas && <p className="text-xs text-muted-foreground">Nie znaleziono pojazdu w aktywnej bazie</p>}
+                      </div>
+                    )}
+                    {activeBase && <p className="text-xs text-muted-foreground/70">Aktywna baza: {activeBase.name}</p>}
                   </div>
                   <div className="space-y-2">
                     <Label className="text-sm font-medium text-muted-foreground">

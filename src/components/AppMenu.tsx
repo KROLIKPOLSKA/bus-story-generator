@@ -1,13 +1,17 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useTheme } from "next-themes";
-import { Database, Menu, Moon, Search, Settings, Sun, X } from "lucide-react";
+import { Database, Menu, Moon, Settings, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { searchVehicles } from "@/data/vehicleDatabase";
+import VehicleBrowser from "@/components/VehicleBrowser";
+import DatabaseManager from "@/components/DatabaseManager";
+import { setActiveBase, useVehicleBases } from "@/lib/vehicleBaseStore";
+
+const NONE = "__builtin__";
 import { AppLogo } from "@/components/AppLogo";
 
 interface AppMenuProps {
@@ -17,9 +21,8 @@ interface AppMenuProps {
 
 export default function AppMenu({ collapsible, onCollapsibleChange }: AppMenuProps) {
   const { theme, setTheme } = useTheme();
-  const [query, setQuery] = useState("");
-  const groups = useMemo(() => searchVehicles(query), [query]);
-  const resultCount = groups.reduce((total, group) => total + group.vehicles.length, 0);
+  const bases = useVehicleBases();
+  const [managerOpen, setManagerOpen] = useState(false);
 
   return (
     <header className="flex h-16 items-center gap-3 border-b border-border bg-background px-4 sm:px-6">
@@ -54,37 +57,28 @@ export default function AppMenu({ collapsible, onCollapsibleChange }: AppMenuPro
                   <Switch id="collapsible-switch" checked={collapsible} onCheckedChange={onCollapsibleChange} />
                 </div>
               </section>
+              <section className="space-y-3">
+                <h2 className="text-xs font-semibold uppercase text-muted-foreground">Autouzupełnianie i bazy pojazdów</h2>
+                <div className="space-y-2 border-b border-border py-4">
+                  <Label htmlFor="active-base" className="text-sm">Aktywna baza lokalna</Label>
+                  <Select value={bases.activeId ?? NONE} onValueChange={(v) => setActiveBase(v === NONE ? null : v)}>
+                    <SelectTrigger id="active-base"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={NONE}>Tylko bazy wbudowane</SelectItem>
+                      {bases.bases.map((b) => <SelectItem key={b.id} value={b.id}>{b.name} · #{b.id.slice(0, 8)} ({b.vehicles.length})</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  <Button variant="outline" className="w-full" onClick={() => setManagerOpen(true)}><Database /> Zarządzaj bazami</Button>
+                </div>
+              </section>
             </TabsContent>
             <TabsContent value="vehicles" className="mt-0 flex min-h-0 flex-1 flex-col data-[state=inactive]:hidden">
-              <div className="relative shrink-0">
-                <Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input aria-label="Szukaj pojazdu" placeholder="Numer, marka, model lub przewoźnik" value={query} onChange={(event) => setQuery(event.target.value)} className="pl-9 pr-10" />
-                {query && <Button variant="ghost" size="icon" className="absolute right-0 top-0" aria-label="Wyczyść wyszukiwanie" onClick={() => setQuery("")}><X /></Button>}
-              </div>
-              <p role="status" className="my-3 shrink-0 text-xs text-muted-foreground">Pojazdy: {resultCount}</p>
-              <div className="min-h-0 flex-1 space-y-6 overflow-y-auto pr-1">
-                {groups.filter((group) => group.vehicles.length > 0).map((group) => (
-                  <section key={group.carrier} aria-label={group.carrier}>
-                    <div className="sticky top-0 flex items-center justify-between border-b border-border bg-background py-3">
-                      <h2 className="text-sm font-semibold">{group.carrier}</h2>
-                      <span className="text-xs text-muted-foreground">{group.vehicles.length} / {group.total}</span>
-                    </div>
-                    <ul className="divide-y divide-border">
-                      {group.vehicles.map((vehicle) => (
-                        <li key={vehicle.number} className="flex items-start gap-3 py-3">
-                          <span className="w-12 shrink-0 rounded-md bg-primary/10 py-1 text-center font-mono text-sm font-medium text-primary">{vehicle.number}</span>
-                          <div className="min-w-0"><p className="text-sm font-medium">{vehicle.brand}</p><p className="break-words text-xs leading-relaxed text-muted-foreground">{vehicle.model}</p></div>
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-                ))}
-                {resultCount === 0 && <p className="py-10 text-center text-sm text-muted-foreground">Nie znaleziono pojazdów.</p>}
-              </div>
+              <VehicleBrowser bases={bases.bases} />
             </TabsContent>
           </Tabs>
         </SheetContent>
       </Sheet>
+      <DatabaseManager open={managerOpen} onOpenChange={setManagerOpen} />
       <AppLogo className="h-8" />
       <span className="text-sm font-medium text-muted-foreground">Generator opisów</span>
     </header>
