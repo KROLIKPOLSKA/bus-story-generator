@@ -2,16 +2,14 @@ import { useState } from "react";
 import { useTheme } from "next-themes";
 import { Database, Menu, Moon, Settings, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VehicleBrowser from "@/components/VehicleBrowser";
 import DatabaseManager from "@/components/DatabaseManager";
-import { setActiveBase, useVehicleBases } from "@/lib/vehicleBaseStore";
-
-const NONE = "__builtin__";
+import { setBaseActive, useVehicleBases } from "@/lib/vehicleBaseStore";
 import { AppLogo } from "@/components/AppLogo";
 
 interface AppMenuProps {
@@ -34,7 +32,7 @@ export default function AppMenu({ collapsible, onCollapsibleChange }: AppMenuPro
         </SheetTrigger>
         <SheetContent side="left" className="flex w-[calc(100%-1rem)] flex-col gap-6 p-5 sm:w-full sm:max-w-md" aria-describedby={undefined}>
           <SheetHeader className="pr-8 text-left">
-            <SheetTitle className="flex items-center gap-2"><AppLogo className="h-7" /> Generator opisów</SheetTitle>
+            <SheetTitle className="flex items-center gap-2"><AppLogo className="h-7" /> Generator opisów autobusowych</SheetTitle>
           </SheetHeader>
           <Tabs defaultValue="settings" className="flex min-h-0 flex-1 flex-col">
             <TabsList className="mb-5 grid w-full shrink-0 grid-cols-2">
@@ -60,14 +58,19 @@ export default function AppMenu({ collapsible, onCollapsibleChange }: AppMenuPro
               <section className="space-y-3">
                 <h2 className="text-xs font-semibold uppercase text-muted-foreground">Autouzupełnianie i bazy pojazdów</h2>
                 <div className="space-y-2 border-b border-border py-4">
-                  <Label htmlFor="active-base" className="text-sm">Aktywna baza lokalna</Label>
-                  <Select value={bases.activeId ?? NONE} onValueChange={(v) => setActiveBase(v === NONE ? null : v)}>
-                    <SelectTrigger id="active-base"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={NONE}>Tylko bazy wbudowane</SelectItem>
-                      {bases.bases.map((b) => <SelectItem key={b.id} value={b.id}>{b.name} · #{b.id.slice(0, 8)} ({b.vehicles.length})</SelectItem>)}
-                    </SelectContent>
-                  </Select>
+                  <p className="text-sm font-medium">Aktywne bazy lokalne</p>
+                  <p className="text-xs text-muted-foreground">Możesz zaznaczyć kilka baz — autouzupełnianie przeszuka je wszystkie. Bazy wbudowane działają zawsze.</p>
+                  {bases.bases.length === 0 && <p className="text-xs text-muted-foreground">Brak własnych baz — używane są tylko bazy wbudowane.</p>}
+                  <ul className="space-y-1">
+                    {bases.bases.map((b) => (
+                      <li key={b.id}>
+                        <label className="flex cursor-pointer items-center gap-2 rounded-md px-1 py-1.5 text-sm hover:bg-accent">
+                          <Checkbox checked={bases.activeIds.includes(b.id)} onCheckedChange={(c) => setBaseActive(b.id, c === true)} />
+                          <span className="min-w-0 flex-1 truncate">{b.name} <span className="text-xs text-muted-foreground">· #{b.id.slice(0, 8)} ({b.vehicles.length})</span></span>
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
                   <Button variant="outline" className="w-full" onClick={() => setManagerOpen(true)}><Database /> Zarządzaj bazami</Button>
                 </div>
               </section>
@@ -80,7 +83,7 @@ export default function AppMenu({ collapsible, onCollapsibleChange }: AppMenuPro
       </Sheet>
       <DatabaseManager open={managerOpen} onOpenChange={setManagerOpen} />
       <AppLogo className="h-8" />
-      <span className="text-sm font-medium text-muted-foreground">Generator opisów</span>
+      <span className="text-sm font-medium text-muted-foreground">Generator opisów autobusowych</span>
     </header>
   );
 }

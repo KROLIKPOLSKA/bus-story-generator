@@ -181,7 +181,8 @@ const DescriptionGenerator = () => {
   );
 
   const vehicleBases = useVehicleBases();
-  const activeBase = vehicleBases.active;
+  const activeBases = vehicleBases.actives;
+  const activeBase = activeBases.length ? activeBases : undefined;
   const carrierOptions = useMemo(() => mergeCarrierOptions(builtinCarriers, vehicleBases.bases), [vehicleBases.bases]);
   const autoVehicle = useRef<{ operator: string; side: string; brand: string; model: string } | null>(null);
   const localMatch = useMemo(() => findLocalVehicle(activeBase, carrier, sideNumber), [activeBase, carrier, sideNumber]);
@@ -210,7 +211,7 @@ const DescriptionGenerator = () => {
       const t = formTypeOf(localMatch.vehicle_type);
       if (t) setVehicleType(t);
       if (localMatch.city) setCity((c) => c.trim() ? c : localMatch.city!);
-      autoVehicle.current = { operator: localMatch.operator || activeBase?.operator || carrier, side: sideNumber, brand: localMatch.brand ?? brand, model: localMatch.model ?? model };
+      autoVehicle.current = { operator: localMatch.operator || localMatch.baseOperator || carrier, side: sideNumber, brand: localMatch.brand ?? brand, model: localMatch.model ?? model };
       return;
     }
     const c = carrier.trim();
@@ -583,7 +584,7 @@ const DescriptionGenerator = () => {
         <div className="mb-6 flex flex-col items-center gap-3 text-center">
           <AppLogo className="h-16" />
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Generator opisów {mode === "film" ? "filmowych" : "do zdjęć"}
+            Generator opisów autobusowych
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Stwórz opis do {mode === "film" ? "filmów" : "zdjęć"} z komunikacji miejskiej
@@ -649,16 +650,16 @@ const DescriptionGenerator = () => {
                         {localSuggestions.length > 0 ? (
                           <div className="flex flex-wrap gap-1.5">
                             {localSuggestions.map((v) => (
-                              <button key={v.id} type="button" onClick={() => setSideNumber(v.vehicle_number || v.fleet_id || v.registration_number || "")}
+                              <button key={v.id} type="button" onClick={() => setSideNumber(v.vehicle_number || "")}
                                 className="rounded-full border border-border bg-secondary px-2.5 py-1 text-xs hover:border-primary/50">
-                                {v.vehicle_number || v.fleet_id || v.registration_number} · {[v.brand, v.model].filter(Boolean).join(" ") || "—"}
+                                {v.vehicle_number} · {[v.brand, v.model].filter(Boolean).join(" ") || "—"}
                               </button>
                             ))}
                           </div>
-                        ) : !builtinHas && <p className="text-xs text-muted-foreground">Nie znaleziono pojazdu w aktywnej bazie</p>}
+                        ) : !builtinHas && <p className="text-xs text-muted-foreground">Nie znaleziono pojazdu w aktywnych bazach</p>}
                       </div>
                     )}
-                    {activeBase && <p className="text-xs text-muted-foreground/70">Aktywna baza: {activeBase.name}</p>}
+                    {activeBases.length > 0 && <p className="text-xs text-muted-foreground/70">{activeBases.length > 1 ? "Aktywne bazy" : "Aktywna baza"}: {activeBases.map((b) => b.name).join(", ")}</p>}
                   </div>
                   <div className="space-y-2">
                     <Label className="text-sm font-medium text-muted-foreground">

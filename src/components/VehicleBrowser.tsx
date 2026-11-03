@@ -13,8 +13,8 @@ function rowsFrom(bases: VehicleBase[]): Row[] {
   const builtin = carrierFleets.flatMap(({ carrier, fleet }) =>
     Object.entries(fleet).map(([number, v]) => ({ key: `b:${carrier}:${number}`, number, brand: v.brand, model: v.model, operator: carrier, city: "Rzeszów", type: "autobus", depot: "", source: "Wbudowana", extra: "" })));
   const local = bases.flatMap((b) => b.vehicles.map((v) => ({
-    key: `l:${b.id}:${v.id}`, number: v.vehicle_number || v.fleet_id || v.registration_number || "—", brand: v.brand ?? "", model: v.model ?? "",
-    operator: v.operator || b.operator, city: v.city || b.city, type: v.vehicle_type ?? "", depot: v.depot ?? "", source: b.name, extra: [v.registration_number, v.production_year, v.fuel_type].filter(Boolean).join(" · "),
+    key: `l:${b.id}:${v.id}`, number: v.vehicle_number || "—", brand: v.brand ?? "", model: v.model ?? "",
+    operator: v.operator || b.operator, city: v.city || b.city, type: v.vehicle_type ?? "", depot: v.depot ?? "", source: b.name, extra: [v.production_year].filter(Boolean).join(" · "),
   })));
   return [...builtin, ...local];
 }

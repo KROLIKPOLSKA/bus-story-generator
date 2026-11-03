@@ -20,9 +20,9 @@ export default defineConfig(({ mode }) => ({
       registerType: "autoUpdate",
       includeAssets: ["favicon.png", "pwa-192x192.png", "pwa-512x512.png"],
       manifest: {
-        name: "Generator Opisów Filmowych",
-        short_name: "Generator Opisów",
-        description: "Generator opisów do filmów z komunikacji miejskiej",
+        name: "Generator opisów autobusowych",
+        short_name: "Generator opisów autobusowych",
+        description: "Generator opisów do filmów i zdjęć autobusów oraz komunikacji miejskiej",
         theme_color: "#1e3a5f",
         background_color: "#0f172a",
         display: "standalone",
