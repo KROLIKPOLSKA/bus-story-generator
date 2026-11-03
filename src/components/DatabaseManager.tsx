@@ -1,6 +1,8 @@
 import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { AlertTriangle, ArrowLeft, Copy, Database, Download, FileJson, FileSpreadsheet, Loader2, Pencil, Plus, Search, Trash2, Upload, CheckCircle2, Star } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Copy, Database, Download, FileJson, FileSpreadsheet, Loader2, Pencil, Plus, Search, Trash2, Upload, CheckCircle2, Star, GraduationCap, Sparkles } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { BaseTutorial, AiPromptView } from "@/components/DatabaseHelp";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,13 +13,13 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
-  applyImport, autoMapHeaders, cleanRecord, createBase, FIELD_LABELS, mapRows, newId, norm, recordIssues, recordKey, resolveOperators, validateImport, VEHICLE_FIELDS,
+  applyImport, autoMapHeaders, cleanRecord, createBase, FIELD_LABELS, mapRows, newId, norm, recordIssues, recordKey, resolveOperators, validateImport, VEHICLE_FIELDS, VEHICLE_TYPE_OPTIONS,
   type BaseMeta, type ColumnMapping, type ConflictChoice, type ImportMode, type ParsedImport, type VehicleBase, type VehicleField, type VehicleRecord,
 } from "@/lib/vehicleBases";
-import { deleteBase, friendlyError, saveBase, setActiveBase, useVehicleBases } from "@/lib/vehicleBaseStore";
+import { deleteBase, friendlyError, saveBase, setBaseActive, useVehicleBases } from "@/lib/vehicleBaseStore";
 import { downloadAllJson, downloadJson, downloadJsonTemplate, downloadXlsx, downloadXlsxTemplate, readImportFile } from "@/lib/vehicleFiles";
 
-type View = { name: "home" } | { name: "editor"; draft: VehicleBase; isNew: boolean } | { name: "import" };
+type View = { name: "home" } | { name: "editor"; draft: VehicleBase; isNew: boolean } | { name: "import" } | { name: "tutorial" } | { name: "prompt" };
 type Confirm = { title: string; text: string; action: string; run: () => void } | null;
 
 const fmt = (iso: string) => new Date(iso).toLocaleString("pl-PL", { dateStyle: "short", timeStyle: "short" });
@@ -45,7 +47,7 @@ export default function DatabaseManager({ open, onOpenChange }: { open: boolean;
             <div className="flex items-center gap-2">
               {view.name !== "home" && <Button variant="ghost" size="icon" aria-label="Wróć" onClick={back} className="-ml-2 h-8 w-8"><ArrowLeft /></Button>}
               <DialogTitle className="flex items-center gap-2"><Database className="h-5 w-5 text-primary" />
-                {view.name === "home" ? "Zarządzaj bazami" : view.name === "import" ? "Importuj zewnętrzną bazę" : view.isNew ? "Nowa baza" : "Edytuj bazę"}
+                {view.name === "home" ? "Zarządzaj bazami" : view.name === "import" ? "Importuj zewnętrzną bazę" : view.name === "tutorial" ? "Poradnik" : view.name === "prompt" ? "Prompt dla SI" : view.isNew ? "Nowa baza" : "Edytuj bazę"}
               </DialogTitle>
             </div>
             <DialogDescription>Bazy są zapisywane tylko na tym urządzeniu, w pamięci przeglądarki.</DialogDescription>
@@ -54,7 +56,8 @@ export default function DatabaseManager({ open, onOpenChange }: { open: boolean;
             {store.status === "loading" && <p className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Wczytywanie baz…</p>}
             {store.status === "error" && <p role="alert" className="text-sm text-destructive">Nie udało się odczytać baz: {store.error}</p>}
             {store.status === "ready" && view.name === "home" && (
-              <Home bases={store.bases} activeId={store.activeId} nameCount={nameCount}
+              <Home bases={store.bases} activeIds={store.activeIds} nameCount={nameCount}
+                onTutorial={() => setView({ name: "tutorial" })} onPrompt={() => setView({ name: "prompt" })}
                 onCreate={() => { setDirty(false); setView({ name: "editor", draft: createBase({}), isNew: true }); }}
                 onImport={() => { setDirty(false); setView({ name: "import" }); }}
                 onEdit={(b) => { setDirty(false); setView({ name: "editor", draft: structuredClone(b), isNew: false }); }}
@@ -63,6 +66,8 @@ export default function DatabaseManager({ open, onOpenChange }: { open: boolean;
               />
             )}
             {view.name === "editor" && <Editor key={view.draft.id} initial={view.draft} isNew={view.isNew} onDirty={setDirty} onConfirm={setConfirm} onDone={() => { setDirty(false); setView({ name: "home" }); }} onCancel={back} />}
+            {view.name === "tutorial" && <BaseTutorial onPrompt={() => setView({ name: "prompt" })} onImport={() => setView({ name: "import" })} />}
+            {view.name === "prompt" && <AiPromptView />}
             {view.name === "import" && <Importer bases={store.bases} onDirty={setDirty} onConfirm={setConfirm} onDone={() => { setDirty(false); setView({ name: "home" }); }} onCancel={back} />}
           </div>
         </DialogContent>
@@ -90,21 +95,30 @@ function ActionCard({ icon: Icon, title, text, onClick, disabled }: { icon: type
   );
 }
 
-function Home({ bases, activeId, nameCount, onCreate, onImport, onEdit, onDelete }: {
-  bases: VehicleBase[]; activeId: string | null; nameCount: (n: string) => number;
+function IconAction({ label, onClick, className, children }: { label: string; onClick: () => void; className?: string; children: React.ReactNode }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild><Button variant="ghost" size="icon" aria-label={label} onClick={onClick} className={className}>{children}</Button></TooltipTrigger>
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
+  );
+}
+
+function Home({ bases, activeIds, nameCount, onCreate, onImport, onEdit, onDelete, onTutorial, onPrompt }: {
+  bases: VehicleBase[]; activeIds: string[]; nameCount: (n: string) => number; onTutorial: () => void; onPrompt: () => void;
   onCreate: () => void; onImport: () => void; onEdit: (b: VehicleBase) => void; onDelete: (b: VehicleBase) => void;
 }) {
-  const [editPick, setEditPick] = useState(false);
   const duplicate = (b: VehicleBase) => {
     const copy: VehicleBase = { ...structuredClone(b), id: newId(), name: `${b.name} (kopia)`, created_at: new Date().toISOString(), vehicles: b.vehicles.map((v) => ({ ...v, id: newId() })) };
     saveBase(copy).then(() => toast.success("Utworzono kopię bazy")).catch((e) => toast.error(friendlyError(e)));
   };
   return (
     <div className="space-y-6">
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2">
+        <ActionCard icon={GraduationCap} title="Poradnik" text="Krok po kroku: jak przygotować, zaimportować i włączyć własną bazę pojazdów." onClick={onTutorial} />
+        <ActionCard icon={Sparkles} title="Prompt dla SI" text="Skopiuj gotowe polecenie dla ChatGPT lub innej SI, które przygotuje poprawny plik JSON." onClick={onPrompt} />
         <ActionCard icon={Upload} title="Importuj zewnętrzną bazę" text="Wczytaj pojazdy z pliku JSON lub Excel, sprawdź podgląd i zatwierdź zapis." onClick={onImport} />
         <ActionCard icon={Plus} title="Utwórz bazę w aplikacji" text="Utwórz pustą bazę, np. „MPK Kraków”, i dodawaj pojazdy w formularzu." onClick={onCreate} />
-        <ActionCard icon={Pencil} title="Edytuj bazę w aplikacji" text="Przeglądaj, poprawiaj i usuwaj rekordy w wybranej bazie." onClick={() => setEditPick(true)} disabled={bases.length === 0} />
       </div>
       <div className="flex flex-wrap gap-2">
         <Button variant="outline" size="sm" onClick={downloadJsonTemplate}><FileJson /> Pobierz szablon JSON</Button>
@@ -113,35 +127,38 @@ function Home({ bases, activeId, nameCount, onCreate, onImport, onEdit, onDelete
       </div>
       <section className="space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-xs font-semibold uppercase text-muted-foreground">{editPick ? "Wybierz bazę do edycji" : "Twoje bazy"}</h3>
-          {editPick && <Button variant="ghost" size="sm" onClick={() => setEditPick(false)}>Anuluj</Button>}
+          <h3 className="text-xs font-semibold uppercase text-muted-foreground">Twoje bazy</h3>
+          {bases.length > 1 && <span className="text-xs text-muted-foreground">Aktywnych może być kilka naraz</span>}
         </div>
         {bases.length === 0 && <p className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">Nie masz jeszcze własnych baz. Zaimportuj plik lub utwórz bazę w aplikacji.</p>}
+        <TooltipProvider delayDuration={200}>
         <ul className="space-y-2">
-          {bases.map((b) => (
+          {bases.map((b) => { const isActive = activeIds.includes(b.id); return (
             <li key={b.id} className="rounded-lg border border-border p-3">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="min-w-0">
                   <p className="flex flex-wrap items-center gap-2 text-sm font-semibold">{b.name}
                     {nameCount(b.name) > 1 && <span className="font-mono text-xs font-normal text-muted-foreground">#{shortId(b.id)}</span>}
-                    {b.id === activeId && <Badge>Aktywna</Badge>}</p>
+                    {isActive && <Badge>Aktywna</Badge>}</p>
                   <p className="text-xs text-muted-foreground">{[b.city, b.operator, b.category].filter(Boolean).join(" · ") || "Brak metadanych"} · {b.vehicles.length} pojazdów</p>
                   <p className="text-xs text-muted-foreground">Utworzono {fmt(b.created_at)} · zmieniono {fmt(b.updated_at)}</p>
                 </div>
-                {editPick ? <Button size="sm" onClick={() => onEdit(b)}><Pencil /> Edytuj</Button> : (
-                  <div className="flex flex-wrap gap-1">
-                    <Button variant={b.id === activeId ? "secondary" : "outline"} size="sm" onClick={() => setActiveBase(b.id === activeId ? null : b.id)} aria-pressed={b.id === activeId}><Star /> {b.id === activeId ? "Aktywna" : "Ustaw aktywną"}</Button>
-                    <Button variant="ghost" size="icon" aria-label={`Edytuj ${b.name}`} onClick={() => onEdit(b)}><Pencil /></Button>
-                    <Button variant="ghost" size="icon" aria-label={`Kopiuj ${b.name}`} onClick={() => duplicate(b)}><Copy /></Button>
-                    <Button variant="ghost" size="icon" aria-label={`Eksportuj ${b.name} do JSON`} onClick={() => downloadJson(b)}><FileJson /></Button>
-                    <Button variant="ghost" size="icon" aria-label={`Eksportuj ${b.name} do Excel`} onClick={() => downloadXlsx(b)}><FileSpreadsheet /></Button>
-                    <Button variant="ghost" size="icon" aria-label={`Usuń ${b.name}`} onClick={() => onDelete(b)} className="text-destructive"><Trash2 /></Button>
-                  </div>
-                )}
+                <div className="flex flex-wrap gap-1">
+                  <Tooltip>
+                    <TooltipTrigger asChild><Button variant={isActive ? "secondary" : "outline"} size="sm" onClick={() => setBaseActive(b.id, !isActive)} aria-pressed={isActive}><Star /> {isActive ? "Aktywna" : "Włącz"}</Button></TooltipTrigger>
+                    <TooltipContent>{isActive ? "Wyłącz tę bazę z autouzupełniania" : "Używaj tej bazy w autouzupełnianiu (razem z innymi aktywnymi)"}</TooltipContent>
+                  </Tooltip>
+                  <IconAction label="Edytuj bazę i jej pojazdy" onClick={() => onEdit(b)}><Pencil /></IconAction>
+                  <IconAction label="Utwórz kopię bazy" onClick={() => duplicate(b)}><Copy /></IconAction>
+                  <IconAction label="Pobierz bazę jako plik JSON" onClick={() => downloadJson(b)}><FileJson /></IconAction>
+                  <IconAction label="Pobierz bazę jako plik Excel" onClick={() => downloadXlsx(b)}><FileSpreadsheet /></IconAction>
+                  <IconAction label="Usuń bazę" onClick={() => onDelete(b)} className="text-destructive"><Trash2 /></IconAction>
+                </div>
               </div>
             </li>
-          ))}
+          ); })}
         </ul>
+        </TooltipProvider>
       </section>
     </div>
   );
@@ -208,13 +225,21 @@ function Editor({ initial, isNew, onDirty, onConfirm, onDone, onCancel }: {
       <MetaFields meta={draft} onChange={(m) => update({ ...draft, ...m })} />
       <section className="space-y-3 rounded-lg border border-border p-4">
         <h3 className="text-sm font-semibold">{editingId ? "Edytuj pojazd" : "Dodaj pojazd"}</h3>
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2">
+        <ActionCard icon={GraduationCap} title="Poradnik" text="Krok po kroku: jak przygotować, zaimportować i włączyć własną bazę pojazdów." onClick={onTutorial} />
+        <ActionCard icon={Sparkles} title="Prompt dla SI" text="Skopiuj gotowe polecenie dla ChatGPT lub innej SI, które przygotuje poprawny plik JSON." onClick={onPrompt} />
           {VEHICLE_FIELDS.map((f, i) => (
             <div key={f} className={f === "notes" ? "space-y-1.5 sm:col-span-3" : "space-y-1.5"}>
               <Label htmlFor={`veh-${f}`} className="text-xs">{FIELD_LABELS[f]}</Label>
+              {f === "vehicle_type" ? (
+                <Select value={form.vehicle_type || "__none"} onValueChange={(v) => setForm({ ...form, vehicle_type: v === "__none" ? "" : v })}>
+                  <SelectTrigger id={`veh-${f}`}><SelectValue /></SelectTrigger>
+                  <SelectContent><SelectItem value="__none">— nie wybrano —</SelectItem>{VEHICLE_TYPE_OPTIONS.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
+                </Select>
+              ) : (
               <Input id={`veh-${f}`} ref={i === 0 ? firstField : undefined} value={form[f] ?? ""} inputMode={f === "production_year" ? "numeric" : undefined}
                 placeholder={f === "operator" && draft.operator ? draft.operator : undefined}
-                onChange={(e) => setForm({ ...form, [f]: e.target.value })} onKeyDown={(e) => e.key === "Enter" && submit(true)} />
+                onChange={(e) => setForm({ ...form, [f]: e.target.value })} onKeyDown={(e) => e.key === "Enter" && submit(true)} />)}
             </div>
           ))}
         </div>
@@ -244,13 +269,13 @@ function Editor({ initial, isNew, onDirty, onConfirm, onDone, onCancel }: {
                 <span className="w-14 shrink-0 rounded-md bg-primary/10 py-1 text-center font-mono text-sm font-medium text-primary">{v.vehicle_number || "—"}</span>
                 <div className="min-w-0 flex-1 text-sm">
                   <p className="font-medium">{[v.brand, v.model].filter(Boolean).join(" ") || "Brak marki i modelu"}</p>
-                  <p className="break-words text-xs text-muted-foreground">{[v.operator, v.city, v.vehicle_type, v.registration_number, v.production_year, v.depot].filter(Boolean).join(" · ")}</p>
+                  <p className="break-words text-xs text-muted-foreground">{[v.operator, v.city, v.vehicle_type, v.production_year, v.depot].filter(Boolean).join(" · ")}</p>
                   {issues.length > 0 && <p className="mt-1 flex items-center gap-1 text-xs text-destructive"><AlertTriangle className="h-3 w-3" /> {issues.join(", ")}</p>}
                   {conflict(v) && <p className="mt-1 flex items-center gap-1 text-xs text-destructive"><AlertTriangle className="h-3 w-3" /> Przewoźnik różni się od przewoźnika bazy ({draft.operator})</p>}
                 </div>
                 <Button variant="ghost" size="icon" aria-label={`Edytuj pojazd ${v.vehicle_number ?? ""}`} onClick={() => { setEditingId(v.id); setForm({ ...v }); setFormError(""); firstField.current?.focus(); }}><Pencil /></Button>
                 <Button variant="ghost" size="icon" className="text-destructive" aria-label={`Usuń pojazd ${v.vehicle_number ?? ""}`}
-                  onClick={() => onConfirm({ title: "Usunąć pojazd?", text: `Pojazd ${v.vehicle_number || v.fleet_id || v.registration_number} zostanie usunięty z tej bazy po zapisaniu zmian.`, action: "Usuń", run: () => update({ ...draft, vehicles: draft.vehicles.filter((x) => x.id !== v.id) }) })}><Trash2 /></Button>
+                  onClick={() => onConfirm({ title: "Usunąć pojazd?", text: `Pojazd ${v.vehicle_number} zostanie usunięty z tej bazy po zapisaniu zmian.`, action: "Usuń", run: () => update({ ...draft, vehicles: draft.vehicles.filter((x) => x.id !== v.id) }) })}><Trash2 /></Button>
               </li>
             );
           })}
@@ -300,10 +325,13 @@ function Importer({ bases, onDirty, onConfirm, onDone, onCancel }: {
   const records = useMemo(() => (parsed ? resolveOperators(mapRows(parsed.rows, mapping), baseOperator, choice) : []), [parsed, mapping, baseOperator, choice]);
   const rawConflicts = useMemo(() => (parsed ? validateImport(mapRows(parsed.rows, mapping), { operator: baseOperator, vehicles: [] }).operatorConflicts.length : 0), [parsed, mapping, baseOperator]);
   const report = useMemo(() => validateImport(records, { operator: baseOperator, vehicles: targetBase?.vehicles ?? [] }), [records, baseOperator, targetBase]);
-  const mappedId = Object.values(mapping).some((f) => f === "vehicle_number" || f === "fleet_id" || f === "registration_number");
+  const mappedId = Object.values(mapping).some((f) => f === "vehicle_number");
+  const committing = useRef(false);
 
   const commit = async () => {
-    if (busy) return;
+    // ref guard: a fast double click must never create two bases
+    if (committing.current || summary) return;
+    committing.current = true;
     setBusy(true);
     try {
       const base = targetBase ? structuredClone(targetBase) : createBase(meta);
@@ -311,7 +339,7 @@ function Importer({ bases, onDirty, onConfirm, onDone, onCancel }: {
       await saveBase({ ...base, vehicles: res.vehicles });
       setSummary(`Zapisano bazę „${base.name}”: dodano ${res.added}, zaktualizowano ${res.updated}, pominięto ${res.skipped}. Łącznie pojazdów: ${res.vehicles.length}.`);
       onDirty(false); toast.success("Import zakończony");
-    } catch (e) { toast.error(`Import nie został zapisany: ${friendlyError(e)}`); }
+    } catch (e) { committing.current = false; toast.error(`Import nie został zapisany: ${friendlyError(e)}`); }
     finally { setBusy(false); }
   };
   const start = () => {
@@ -359,7 +387,7 @@ function Importer({ bases, onDirty, onConfirm, onDone, onCancel }: {
           </section>
           <section className="space-y-3">
             <h3 className="text-sm font-semibold">Mapowanie kolumn</h3>
-            {!mappedId && <p role="alert" className="text-sm text-destructive">Nie rozpoznano kolumny z identyfikatorem pojazdu. Przypisz ręcznie numer taborowy, rejestracyjny lub identyfikator wewnętrzny.</p>}
+            {!mappedId && <p role="alert" className="text-sm text-destructive">Nie rozpoznano kolumny z identyfikatorem pojazdu. Przypisz ręcznie kolumnę z numerem taborowym.</p>}
             <div className="grid gap-2 sm:grid-cols-2">
               {parsed.headers.map((h) => (
                 <div key={h} className="flex items-center gap-2">
@@ -376,10 +404,10 @@ function Importer({ bases, onDirty, onConfirm, onDone, onCancel }: {
             <h3 className="text-sm font-semibold">Podgląd (pierwsze 10 rekordów)</h3>
             <div className="overflow-x-auto rounded-lg border border-border">
               <table className="w-full text-xs">
-                <thead className="bg-muted"><tr>{["vehicle_number", "operator", "brand", "model", "vehicle_type", "registration_number"].map((f) => <th key={f} className="whitespace-nowrap p-2 text-left font-medium">{FIELD_LABELS[f as VehicleField]}</th>)}</tr></thead>
+                <thead className="bg-muted"><tr>{["vehicle_number", "operator", "brand", "model", "vehicle_type", "production_year"].map((f) => <th key={f} className="whitespace-nowrap p-2 text-left font-medium">{FIELD_LABELS[f as VehicleField]}</th>)}</tr></thead>
                 <tbody>{records.slice(0, 10).map((r, i) => (
                   <tr key={i} className={`border-t border-border ${report.invalid.some((x) => x.index === i) ? "text-destructive" : ""}`}>
-                    {(["vehicle_number", "operator", "brand", "model", "vehicle_type", "registration_number"] as VehicleField[]).map((f) => <td key={f} className="whitespace-nowrap p-2">{r[f] ?? ""}</td>)}
+                    {(["vehicle_number", "operator", "brand", "model", "vehicle_type", "production_year"] as VehicleField[]).map((f) => <td key={f} className="whitespace-nowrap p-2">{r[f] ?? ""}</td>)}
                   </tr>))}</tbody>
               </table>
             </div>
