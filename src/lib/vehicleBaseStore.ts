@@ -7,8 +7,8 @@ const DB_NAME = "gen_vehicle_bases";
 const STORE = "bases";
 const ACTIVE_KEY = "gen_active_base";
 
-type State = { status: "loading" | "ready" | "error"; bases: VehicleBase[]; activeId: string | null; error?: string };
-let state: State = { status: "loading", bases: [], activeId: null };
+type State = { status: "loading" | "ready" | "error"; bases: VehicleBase[]; activeIds: string[]; error?: string };
+let state: State = { status: "loading", bases: [], activeIds: [] };
 const listeners = new Set<() => void>();
 const emit = (next: Partial<State>) => { state = { ...state, ...next }; listeners.forEach((l) => l()); };
 
@@ -39,14 +39,19 @@ export function friendlyError(e: unknown): string {
   return e instanceof Error && e.message ? e.message : "Nieznany błąd zapisu danych.";
 }
 
-function readActive() { try { return localStorage.getItem(ACTIVE_KEY); } catch { return null; } }
+// Stored as a JSON array; an older single-id string is still accepted.
+function readActive(): string[] {
+  try { const raw = localStorage.getItem(ACTIVE_KEY); if (!raw) return []; try { const v = JSON.parse(raw); return Array.isArray(v) ? v.filter((x) => typeof x === "string") : [String(v)]; } catch { return [raw]; } }
+  catch { return []; }
+}
+function writeActive(ids: string[]) { try { if (ids.length) localStorage.setItem(ACTIVE_KEY, JSON.stringify(ids)); else localStorage.removeItem(ACTIVE_KEY); } catch { /* ignore */ } }
 
 export async function loadBases() {
   try {
     const bases = ((await tx<VehicleBase[]>("readonly", (s) => s.getAll())) ?? []).filter((b) => b && b.id && Array.isArray(b.vehicles));
     bases.sort((a, b) => a.name.localeCompare(b.name, "pl") || a.created_at.localeCompare(b.created_at));
     const saved = readActive();
-    emit({ status: "ready", bases, activeId: bases.some((b) => b.id === saved) ? saved : null, error: undefined });
+    emit({ status: "ready", bases, activeIds: saved.filter((id) => bases.some((b) => b.id === id)), error: undefined });
   } catch (e) { emit({ status: "error", error: friendlyError(e) }); }
 }
 
@@ -61,19 +66,23 @@ export async function saveBase(base: VehicleBase) {
 
 export async function deleteBase(id: string) {
   await tx("readwrite", (s) => s.delete(id));
-  emit({ bases: state.bases.filter((b) => b.id !== id), activeId: state.activeId === id ? null : state.activeId });
-  if (readActive() === id) try { localStorage.removeItem(ACTIVE_KEY); } catch { /* ignore */ }
+  const activeIds = state.activeIds.filter((x) => x !== id);
+  emit({ bases: state.bases.filter((b) => b.id !== id), activeIds });
+  writeActive(activeIds);
 }
 
-export function setActiveBase(id: string | null) {
-  try { if (id) localStorage.setItem(ACTIVE_KEY, id); else localStorage.removeItem(ACTIVE_KEY); } catch { /* ignore */ }
-  emit({ activeId: id });
+/** Several bases may be active at once; autofill searches them all. */
+export function setBaseActive(id: string, on: boolean) {
+  const activeIds = on ? [...new Set([...state.activeIds, id])] : state.activeIds.filter((x) => x !== id);
+  writeActive(activeIds);
+  emit({ activeIds });
 }
+export function clearActiveBases() { writeActive([]); emit({ activeIds: [] }); }
 
 const subscribe = (l: () => void) => { listeners.add(l); return () => listeners.delete(l); };
 let started = false;
 export function useVehicleBases() {
   if (!started && typeof window !== "undefined") { started = true; void loadBases(); }
   const s = useSyncExternalStore(subscribe, () => state);
-  return { ...s, active: s.bases.find((b) => b.id === s.activeId) };
+  return { ...s, actives: s.bases.filter((b) => s.activeIds.includes(b.id)) };
 }

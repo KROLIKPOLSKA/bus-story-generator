@@ -1,16 +1,20 @@
 // Pure model + logic for user-created local vehicle databases (no I/O here).
 export const VEHICLE_FIELDS = [
   "vehicle_number", "city", "operator", "vehicle_type", "brand", "model",
-  "registration_number", "fleet_id", "production_year", "depot", "fuel_type", "notes",
+  "production_year", "depot", "notes",
 ] as const;
 export type VehicleField = (typeof VEHICLE_FIELDS)[number];
 export type VehicleRecord = { id: string } & Partial<Record<VehicleField, string>>;
 
 export const FIELD_LABELS: Record<VehicleField, string> = {
   vehicle_number: "Numer taborowy", city: "Miasto", operator: "Przewoźnik", vehicle_type: "Typ pojazdu",
-  brand: "Marka", model: "Model", registration_number: "Nr rejestracyjny", fleet_id: "Identyfikator wewnętrzny",
-  production_year: "Rok produkcji", depot: "Zajezdnia", fuel_type: "Rodzaj napędu", notes: "Dodatkowe informacje",
+  brand: "Marka", model: "Model", production_year: "Rok produkcji", depot: "Zajezdnia", notes: "Dodatkowe informacje",
 };
+
+/** Vehicle types available in the generator form; base records store one of these labels. */
+export const VEHICLE_TYPE_OPTIONS = ["Autobus", "Tramwaj", "Pociąg", "Inny"] as const;
+const TYPE_LABEL = { autobus: "Autobus", tramwaj: "Tramwaj", pociag: "Pociąg", inny: "Inny" } as const;
+export const vehicleTypeLabel = (v?: string) => { const t = formTypeOf(v); return t ? TYPE_LABEL[t] : ""; };
 
 export interface VehicleBase {
   id: string; name: string; city: string; operator: string; category: string; description: string;
@@ -39,19 +43,19 @@ export function cleanValue(v: unknown): string {
 
 export function cleanRecord(raw: Partial<Record<VehicleField, unknown>>, id = newId()): VehicleRecord {
   const rec: VehicleRecord = { id };
-  for (const f of VEHICLE_FIELDS) { const v = cleanValue(raw[f]); if (v) rec[f] = v; }
+  for (const f of VEHICLE_FIELDS) { let v = cleanValue(raw[f]); if (f === "vehicle_type") v = vehicleTypeLabel(v); if (v) rec[f] = v; }
   return rec;
 }
 
 /** Identity of a vehicle inside one base: operator + best available identifier. */
 export function recordKey(r: VehicleRecord): string | null {
-  const ident = r.vehicle_number ? `n:${norm(r.vehicle_number)}` : r.fleet_id ? `f:${norm(r.fleet_id)}` : r.registration_number ? `r:${norm(r.registration_number)}` : null;
+  const ident = r.vehicle_number ? `n:${norm(r.vehicle_number)}` : null;
   return ident ? `${norm(r.operator)}|${ident}` : null;
 }
 
 export function recordIssues(r: VehicleRecord): string[] {
   const issues: string[] = [];
-  if (!r.vehicle_number && !r.fleet_id && !r.registration_number) issues.push("Brak numeru taborowego lub innego identyfikatora");
+  if (!r.vehicle_number) issues.push("Brak numeru taborowego");
   if (r.production_year && !/^(18|19|20)\d{2}$/.test(r.production_year)) issues.push("Nieprawidłowy rok produkcji");
   if (!r.brand && !r.model) issues.push("Brak marki i modelu");
   return issues;
@@ -65,11 +69,8 @@ const ALIASES: Record<VehicleField, string[]> = {
   vehicle_type: ["vehicle type", "typ", "typ pojazdu", "rodzaj pojazdu", "type", "kategoria"],
   brand: ["brand", "marka", "producent", "manufacturer"],
   model: ["model", "typ modelu"],
-  registration_number: ["registration number", "rejestracja", "nr rejestracyjny", "numer rejestracyjny", "registration", "plate"],
-  fleet_id: ["fleet id", "id wewnetrzny", "identyfikator", "identyfikator wewnetrzny", "internal id"],
   production_year: ["production year", "rok produkcji", "rok", "year"],
   depot: ["depot", "zajezdnia", "baza", "garage"],
-  fuel_type: ["fuel type", "naped", "rodzaj napedu", "paliwo", "fuel"],
   notes: ["notes", "uwagi", "informacje", "dodatkowe informacje", "opis"],
 };
 
@@ -159,7 +160,7 @@ export function validateImport(records: VehicleRecord[], base: Pick<VehicleBase,
   const seen = new Set<string>();
   const existingKeys = new Set(base.vehicles.map(recordKey).filter(Boolean) as string[]);
   records.forEach((r, i) => {
-    const hasId = !!(r.vehicle_number || r.fleet_id || r.registration_number);
+    const hasId = !!r.vehicle_number;
     const issues = recordIssues(r).filter((x) => !x.startsWith("Brak marki"));
     if (!hasId || issues.length) invalid.push({ index: i, issues });
     if (base.operator && r.operator && norm(r.operator) !== norm(base.operator)) conflicts.push(i);
@@ -215,18 +216,26 @@ const recOperator = (b: VehicleBase, r: VehicleRecord) => r.operator || b.operat
 export const operatorMatches = (b: VehicleBase, r: VehicleRecord, operator: string) =>
   !operator.trim() || norm(recOperator(b, r)) === norm(operator);
 
-export function findLocalVehicle(base: VehicleBase | undefined, operator: string, number: string): VehicleRecord | undefined {
+type BaseArg = VehicleBase | VehicleBase[] | undefined;
+const asList = (b: BaseArg) => (Array.isArray(b) ? b : b ? [b] : []);
+
+/** Searches every given (active) base in order; the first match wins. */
+export function findLocalVehicle(bases: BaseArg, operator: string, number: string): (VehicleRecord & { baseOperator?: string }) | undefined {
   const n = norm(number);
-  if (!base || !n) return undefined;
-  return base.vehicles.find((r) => operatorMatches(base, r, operator) && (norm(r.vehicle_number) === n || (!r.vehicle_number && (norm(r.fleet_id) === n || norm(r.registration_number) === n))));
+  if (!n) return undefined;
+  for (const base of asList(bases)) {
+    const r = base.vehicles.find((x) => operatorMatches(base, x, operator) && norm(x.vehicle_number) === n);
+    if (r) return { ...r, baseOperator: base.operator };
+  }
+  return undefined;
 }
 
-export function suggestLocalVehicles(base: VehicleBase | undefined, operator: string, query: string, limit = 6): VehicleRecord[] {
+export function suggestLocalVehicles(bases: BaseArg, operator: string, query: string, limit = 6): VehicleRecord[] {
   const terms = norm(query).split(" ").filter(Boolean);
-  if (!base || terms.length === 0) return [];
-  return base.vehicles
+  if (terms.length === 0) return [];
+  return asList(bases).flatMap((base) => base.vehicles
     .filter((r) => operatorMatches(base, r, operator))
-    .filter((r) => { const t = norm([r.vehicle_number, r.brand, r.model, r.registration_number, r.fleet_id, r.depot].join(" ")); return terms.every((x) => t.includes(x)); })
+    .filter((r) => { const t = norm([r.vehicle_number, r.brand, r.model, r.depot].join(" ")); return terms.every((x) => t.includes(x)); }))
     .slice(0, limit);
 }
 
