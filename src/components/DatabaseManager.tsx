@@ -225,9 +225,7 @@ function Editor({ initial, isNew, onDirty, onConfirm, onDone, onCancel }: {
       <MetaFields meta={draft} onChange={(m) => update({ ...draft, ...m })} />
       <section className="space-y-3 rounded-lg border border-border p-4">
         <h3 className="text-sm font-semibold">{editingId ? "Edytuj pojazd" : "Dodaj pojazd"}</h3>
-        <div className="grid gap-3 sm:grid-cols-2">
-        <ActionCard icon={GraduationCap} title="Poradnik" text="Krok po kroku: jak przygotować, zaimportować i włączyć własną bazę pojazdów." onClick={onTutorial} />
-        <ActionCard icon={Sparkles} title="Prompt dla SI" text="Skopiuj gotowe polecenie dla ChatGPT lub innej SI, które przygotuje poprawny plik JSON." onClick={onPrompt} />
+        <div className="grid gap-3 sm:grid-cols-3">
           {VEHICLE_FIELDS.map((f, i) => (
             <div key={f} className={f === "notes" ? "space-y-1.5 sm:col-span-3" : "space-y-1.5"}>
               <Label htmlFor={`veh-${f}`} className="text-xs">{FIELD_LABELS[f]}</Label>
